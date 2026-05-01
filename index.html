@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B2B4B">
+<meta name="description" content="50 production-grade AI prompts for residential real estate agents.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Promptdeed">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>Promptdeed â Your deed to done-for-you copy.</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Helvetica,Arial,sans-serif;background:#FAF7F2;color:#1A1A1A;line-height:1.5;min-height:100vh;overflow-x:hidden}
+@media (prefers-color-scheme:dark){
+  body{background:#0E1525;color:#E8E6E1}
+  .card,.prompt-block,.modal-card{background:#162033!important;border-color:#243047!important}
+  .copy-btn{background:#1B2B4B!important;color:#FAF7F2!important}
+  .input{background:#0E1525!important;color:#E8E6E1!important;border-color:#243047!important}
+}
+header{background:#1B2B4B;color:#FAF7F2;padding:18px 20px;position:sticky;top:0;z-index:10;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.brand-row{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:780px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.brand h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.brand .logo{width:32px;height:32px;background:#B8743D;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FAF7F2;font-weight:800;font-size:18px}
+.tagline{font-size:13px;color:#C8CDD7;margin:4px 0 0;max-width:780px;margin-left:auto;margin-right:auto}
+nav button{background:transparent;color:#FAF7F2;border:1px solid #3a4769;padding:7px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
+nav button:hover{background:#243657}
+.container{max-width:780px;margin:0 auto;padding:20px}
+.section-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;margin:0 0 12px;font-weight:600}
+.cards{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:560px){.cards{grid-template-columns:1fr 1fr}}
+.card{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:16px;cursor:pointer;transition:transform .08s ease,box-shadow .08s ease,border-color .08s ease}
+.card:hover{border-color:#B8743D;box-shadow:0 4px 12px rgba(27,43,75,.08)}
+.card:active{transform:scale(.99)}
+.card h3{margin:0 0 4px;font-size:16px;font-weight:600;color:inherit}
+.card p{margin:0;font-size:13px;color:#6B7280}
+.card .meta{margin-top:10px;font-size:12px;color:#B8743D;font-weight:600}
+.prompt-list{display:flex;flex-direction:column;gap:8px}
+.prompt-item{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prompt-item:hover{border-color:#B8743D}
+.prompt-item .pi-title{font-weight:600;font-size:15px}
+.prompt-item .pi-num{font-size:12px;color:#6B7280;flex-shrink:0}
+.prompt-item.locked{opacity:.55}
+.prompt-item.locked::after{content:"\1F512";margin-left:8px;font-size:14px}
+.back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#1B2B4B;font-size:14px;cursor:pointer;padding:8px 0 16px;font-weight:500}
+@media (prefers-color-scheme:dark){.back{color:#E8E6E1}}
+.prompt-block{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:18px;margin-bottom:14px}
+.prompt-block h2{margin:0 0 6px;font-size:20px}
+.prompt-block .pb-cat{font-size:12px;color:#B8743D;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.prompt-block .pb-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:700;margin:18px 0 6px}
+.prompt-block pre{white-space:pre-wrap;word-wrap:break-word;background:#F5F1EA;border:1px solid #E6E1D9;border-radius:6px;padding:12px;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.55;margin:0;max-height:none;overflow-x:auto}
+@media (prefers-color-scheme:dark){.prompt-block pre{background:#0B1322;border-color:#243047;color:#E8E6E1}}
+.copy-btn{background:#1B2B4B;color:#FAF7F2;border:none;padding:11px 18px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;width:100%;margin-top:10px}
+.copy-btn:hover{background:#243657}
+.copy-btn.copied{background:#2F7D5C}
+.locked-banner{background:#1B2B4B;color:#FAF7F2;padding:18px;border-radius:10px;text-align:center}
+.locked-banner h3{margin:0 0 6px}
+.locked-banner p{margin:0 0 12px;color:#C8CDD7;font-size:14px}
+.locked-banner button{background:#B8743D;color:#FAF7F2;border:none;padding:10px 20px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px}
+.input{width:100%;padding:11px 12px;border:1px solid #E6E1D9;border-radius:6px;font-size:15px;background:#fff;color:#1A1A1A;font-family:inherit}
+.input:focus{outline:none;border-color:#B8743D}
+.settings-row{margin-bottom:16px}
+.settings-row label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.settings-row .help{font-size:12px;color:#6B7280;margin-top:6px}
+.btn-primary{background:#1B2B4B;color:#FAF7F2;border:none;padding:11px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px;margin-top:8px}
+.btn-primary:hover{background:#243657}
+.status{margin-top:10px;padding:10px;border-radius:6px;font-size:13px;display:none}
+.status.ok{background:#E6F4EE;color:#1F5F44;border:1px solid #BFE0CF;display:block}
+.status.err{background:#FCEBE7;color:#8B2A1A;border:1px solid #F2C8BF;display:block}
+@media (prefers-color-scheme:dark){
+  .status.ok{background:#0F2A22;color:#7AD5AC;border-color:#1F5F44}
+  .status.err{background:#2A140F;color:#F2A593;border-color:#5F2418}
+}
+.unlock-state{padding:12px;border-radius:6px;background:#F5F1EA;border:1px solid #E6E1D9;font-size:13px;margin-bottom:14px}
+@media (prefers-color-scheme:dark){.unlock-state{background:#0F1A2C;border-color:#243047}}
+.unlock-state strong{color:#B8743D}
+.footer{text-align:center;padding:30px 20px 50px;font-size:12px;color:#6B7280}
+.modal-overlay{position:fixed;inset:0;background:rgba(14,21,37,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-overlay.show{display:flex}
+.modal-card{background:#fff;border-radius:10px;padding:22px;max-width:420px;width:100%}
+.modal-card h3{margin:0 0 8px}
+.modal-card p{margin:0 0 12px;font-size:14px;color:#6B7280}
+.modal-card .row{display:flex;gap:8px;margin-top:8px}
+.modal-card .row button{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-row">
+    <div class="brand" id="brand-home">
+      <div class="logo">P</div>
+      <h1>Promptdeed</h1>
+    </div>
+    <nav><button id="settings-btn">Settings</button></nav>
+  </div>
+  <div class="tagline">Your deed to done-for-you copy.</div>
+</header>
+
+<main class="container" id="root"></main>
+
+<div class="footer">
+  <div>Promptdeed v1.0.0 Â· 50 prompts Â· 10 categories</div>
+  <div style="margin-top:4px">Â© 2026 Promptdeed. All prompts Â© their respective authors.</div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-card">
+    <h3 id="modal-title"></h3>
+    <p id="modal-body"></p>
+    <div class="row">
+      <button class="btn-primary" id="modal-ok" style="margin-top:0">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const DATA = {"brand":{"name":"Promptdeed","tagline":"Your deed to done-for-you copy.","headline":"Stop Getting Generic Output. Start Getting Copy That Closes.","subheadline":"For busy residential agents, Promptdeed turns ChatGPT and Claude into a copywriter who actually knows real estate.","voice":"Direct, Practical, Agent-fluent","audience":"US residential real estate agents"},"categories":[{"id":1,"name":"Listing Descriptions & Property Marketing","description":"Write compelling MLS and marketing copy for listings","order":1},{"id":2,"name":"Social Media Content (Instagram, Facebook, TikTok)","description":"Engaging captions, reels scripts, and post hooks","order":2},{"id":3,"name":"Lead Follow-Up & Nurture Emails","description":"Email sequences that convert leads into clients","order":3},{"id":4,"name":"FSBO & Expired Listing Scripts","description":"Conversion scripts for hard-to-win seller leads","order":4},{"id":5,"name":"Buyer Consultation & Discovery","description":"Questions and frameworks for buyer meetings","order":5},{"id":6,"name":"Seller Listing Presentations","description":"Win listings with confidence","order":6},{"id":7,"name":"Open House Marketing & Scripts","description":"Drive traffic and convert open house visitors","order":7},{"id":8,"name":"Market Reports & Neighborhood Guides","description":"Position yourself as the local expert","order":8},{"id":9,"name":"Negotiation, Offers & Closing Communication","description":"Communicate clearly through the deal","order":9},{"id":10,"name":"Personal Branding, Bio & Video Scripts","description":"Build your brand and on-camera presence","order":10}],"prompts":[{"id":1,"category_id":1,"idx":1,"title":"Luxury Listing Description (MLS-Optimized)","text":"You are an expert real estate copywriter who writes for luxury and high-end residential listings.\n\nYour job: write an MLS listing description that is both editorially compelling AND MLS-compliant â no fair-housing violations, no exaggerated claims about returns, no language that could be construed as steering.\n\nINPUTS:\n[PROPERTY ADDRESS]\n[LIST PRICE]\n[BEDROOMS] / [BATHROOMS] / [SQUARE FEET] / [LOT SIZE] / [YEAR BUILT]\n[KEY FEATURES] (comma-separated)\n[NEIGHBORHOOD]\n[UNIQUE SELLING POINTS]\n[COMPARABLE CONTEXT]\n[TARGET BUYER]\n[TONE] (e.g. aspirational, editorial, sophisticated)\n[WORD COUNT]\n\nOUTPUT FORMAT:\n- Lead with a magnetic opening sentence that paints a lifestyle picture.\n- Body in 2â4 short paragraphs (no bullet lists). Weave in 3â5 of the strongest features naturally â don't list every input.\n- Close with a paragraph that anchors location and a soft call-to-tour.\n- Stay within Â±10% of [WORD COUNT].\n- Avoid: \"must see,\" \"won't last,\" \"motivated seller,\" any reference to protected classes, any school-quality claim.\n\nReturn only the description. No headings, no explanations.","input":"[PROPERTY ADDRESS]: 4821 Harborview Lane, Newport Beach, CA\n[LIST PRICE]: $3,250,000\n[BEDROOMS]: 5\n[BATHROOMS]: 4 full, 1 half\n[SQUARE FEET]: 4,850\n[LOT SIZE]: 0.38 acres\n[YEAR BUILT]: 2019\n[KEY FEATURES]: chef's kitchen with Sub-Zero and Wolf appliances, primary suite with ocean-view balcony, temperature-controlled wine cellar, resort-style pool and spa, 4-car garage, whole-home Lutron smart lighting, solar panels\n[NEIGHBORHOOD]: Newport Beach, steps from Back Bay Nature Preserve\n[UNIQUE SELLING POINTS]: unobstructed Catalina Island views, no HOA, corner lot with maximum privacy\n[COMPARABLE CONTEXT]: similar homes sold $3.1Mâ$3.5M in past 6 months\n[TARGET BUYER]: affluent move-up buyer or second-home buyer seeking coastal California lifestyle\n[TONE]: aspirational, editorial, sophisticated â think Architectural Digest\n[WORD COUNT]: 280","output":"Rarely does a residence so effortlessly merge architectural precision with the boundless spirit of the California coast. Set on a private corner lot in one of Newport Beach's most coveted enclaves, 4821 Harborview Lane is a 2019-built masterwork where every detail has been curated for those who refuse to compromise.\n\nFive bedrooms and four-and-a-half baths unfold across 4,850 square feet of light-drenched living space, anchored by a chef's kitchen outfitted with Sub-Zero refrigeration and Wolf professional appliances. Entertain without limitation â a temperature-controlled wine cellar awaits your collection while the resort-style pool and spa transform the 0.38-acre grounds into a private retreat.\n\nAscend to the primary suite and step onto your private balcony where unobstructed views of Catalina Island greet each morning. Whole-home Lutron smart lighting, owned solar panels, and a 4-car garage ensure every modern convenience is accounted for â without the constraints of an HOA.\n\nSteps from the Back Bay Nature Preserve and minutes from Newport Beach's most celebrated dining and coastline, this is more than a home â it's a deed to the coastal California lifestyle most can only imagine. Schedule your private tour today."},{"id":2,"category_id":1,"idx":2,"title":"Entry-Level Home Description for First-Time Buyers","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":3,"category_id":1,"idx":3,"title":"Fixer-Upper / Investor Listing Description","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":4,"category_id":1,"idx":4,"title":"Luxury Estate Property Brochure Copy","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":5,"category_id":1,"idx":5,"title":"Just-Listed Multi-Channel Marketing Kit","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":6,"category_id":2,"idx":1,"title":"Instagram Carousel: Just-Sold Story","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":7,"category_id":2,"idx":2,"title":"30-Second Reel Script: Neighborhood Spotlight","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":8,"category_id":2,"idx":3,"title":"Facebook Post: Open House Invitation","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":9,"category_id":2,"idx":4,"title":"TikTok Hook: Common Buyer Mistake","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":10,"category_id":2,"idx":5,"title":"Weekly Content Calendar (7 Posts)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":11,"category_id":3,"idx":1,"title":"Cold Lead Re-Engagement Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":12,"category_id":3,"idx":2,"title":"5-Email Buyer Nurture Sequence","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":13,"category_id":3,"idx":3,"title":"Post-Open-House Follow-Up Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":14,"category_id":3,"idx":4,"title":"Sphere of Influence Quarterly Check-In","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":15,"category_id":3,"idx":5,"title":"Lost Lead Win-Back Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":16,"category_id":4,"idx":1,"title":"FSBO Cold-Call Opening Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":17,"category_id":4,"idx":2,"title":"FSBO Voicemail Script (45 seconds)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":18,"category_id":4,"idx":3,"title":"Expired Listing First-Contact Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":19,"category_id":4,"idx":4,"title":"Expired Listing Letter (Direct Mail)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":20,"category_id":4,"idx":5,"title":"FSBO Objection-Handling Cheat Sheet","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":21,"category_id":5,"idx":1,"title":"Buyer Discovery Questionnaire (25 Questions)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":22,"category_id":5,"idx":2,"title":"First-Time Buyer Education Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":23,"category_id":5,"idx":3,"title":"Buyer Needs vs. Wants Worksheet Generator","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":24,"category_id":5,"idx":4,"title":"Pre-Approval Conversation Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":25,"category_id":5,"idx":5,"title":"Buyer Consultation Recap Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":26,"category_id":6,"idx":1,"title":"Pre-Listing Appointment Email + Agenda","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":27,"category_id":6,"idx":2,"title":"Listing Presentation Outline (10 Slides)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":28,"category_id":6,"idx":3,"title":"Pricing Strategy Talking Points","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":29,"category_id":6,"idx":4,"title":"Seller Net Sheet Explanation Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":30,"category_id":6,"idx":5,"title":"Commission Objection Response Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":31,"category_id":7,"idx":1,"title":"Open House Multi-Channel Promo Pack","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":32,"category_id":7,"idx":2,"title":"Open House Visitor Sign-In Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":33,"category_id":7,"idx":3,"title":"Door-Knocking Script for Open House Promotion","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":34,"category_id":7,"idx":4,"title":"Open House Follow-Up Email (24-Hour)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":35,"category_id":7,"idx":5,"title":"Open House Neighbor Invitation Letter","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":36,"category_id":8,"idx":1,"title":"Monthly Market Update Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":37,"category_id":8,"idx":2,"title":"Neighborhood Guide (1,000-Word Blog Post)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":38,"category_id":8,"idx":3,"title":"Quarterly Market Report PDF Outline","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":39,"category_id":8,"idx":4,"title":"School District Comparison Guide","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":40,"category_id":8,"idx":5,"title":"\"Is Now a Good Time to Buy?\" Article","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":41,"category_id":9,"idx":1,"title":"Offer Submission Cover Letter","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":42,"category_id":9,"idx":2,"title":"Multiple-Offer Strategy Email to Buyer","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":43,"category_id":9,"idx":3,"title":"Counter-Offer Communication Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":44,"category_id":9,"idx":4,"title":"Inspection Negotiation Talking Points","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":45,"category_id":9,"idx":5,"title":"Closing Day Communication Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":46,"category_id":10,"idx":1,"title":"Agent Bio (Long-Form Website Version)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":47,"category_id":10,"idx":2,"title":"Short Agent Bio (Social Media)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":48,"category_id":10,"idx":3,"title":"60-Second \"About Me\" Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":49,"category_id":10,"idx":4,"title":"Listing Walk-Through Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":50,"category_id":10,"idx":5,"title":"Year-End Recap Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"}],"free_prompt_count":5,"unlock_code":"PROMPTDEED-LAUNCH-2026"};
+
+/* ---------- STATE ---------- */
+const STATE = {
+  unlocked: localStorage.getItem('promptdeed_unlocked') === '1',
+  view: 'home',
+  catId: null,
+  promptId: null
+};
+
+/* ---------- HELPERS ---------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+const root = $('#root');
+const modal = $('#modal');
+
+function showModal(title, body) {
+  $('#modal-title').textContent = title;
+  $('#modal-body').textContent = body;
+  modal.classList.add('show');
+}
+$('#modal-ok').addEventListener('click', () => modal.classList.remove('show'));
+modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+function isLocked(promptIdx) {
+  // first 5 prompts (by global ID 1-5) are free; rest locked unless unlocked
+  return !STATE.unlocked && promptIdx > DATA.free_prompt_count;
+}
+
+function copyToClipboard(text, btn) {
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(fallback);
+  } else { fallback(); }
+  if (btn) {
+    btn.classList.add('copied');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------- VIEWS ---------- */
+function renderHome() {
+  STATE.view = 'home'; STATE.catId = null; STATE.promptId = null;
+  const intro = `
+    <p class="section-title">Browse Categories</p>
+    <div class="unlock-state">
+      ${STATE.unlocked
+        ? '<strong>Unlocked.</strong> All 50 prompts available.'
+        : `<strong>Free preview.</strong> First ${DATA.free_prompt_count} prompts unlocked. Enter your code in Settings to unlock all 50.`}
+    </div>
+  `;
+  const cards = DATA.categories.map((c) => {
+    const promptCount = DATA.prompts.filter((p) => p.category_id === c.id).length;
+    return `
+      <div class="card" data-cat="${c.id}">
+        <h3>${escapeHtml(c.name)}</h3>
+        <p>${escapeHtml(c.description)}</p>
+        <div class="meta">${promptCount} prompts</div>
+      </div>
+    `;
+  }).join('');
+  root.innerHTML = intro + '<div class="cards">' + cards + '</div>';
+  root.querySelectorAll('.card').forEach((el) => {
+    el.addEventListener('click', () => renderCategory(parseInt(el.dataset.cat, 10)));
+  });
+}
+
+function renderCategory(catId) {
+  STATE.view = 'category'; STATE.catId = catId;
+  const cat = DATA.categories.find((c) => c.id === catId);
+  const items = DATA.prompts.filter((p) => p.category_id === catId);
+  const list = items.map((p) => {
+    const locked = isLocked(p.id);
+    return `
+      <div class="prompt-item ${locked ? 'locked' : ''}" data-pid="${p.id}">
+        <div class="pi-title">${escapeHtml(p.title)}</div>
+        <div class="pi-num">#${p.id}</div>
+      </div>
+    `;
+  }).join('');
+  root.innerHTML = `
+    <button class="back" id="back-home">â All Categories</button>
+    <p class="section-title">${escapeHtml(cat.name)}</p>
+    <div class="prompt-list">${list}</div>
+  `;
+  $('#back-home').addEventListener('click', renderHome);
+  root.querySelectorAll('.prompt-item').forEach((el) => {
+    el.addEventListener('click', () => renderPrompt(parseInt(el.dataset.pid, 10)));
+  });
+}
+
+function renderPrompt(pid) {
+  STATE.view = 'prompt'; STATE.promptId = pid;
+  const p = DATA.prompts.find((x) => x.id === pid);
+  const cat = DATA.categories.find((c) => c.id === p.category_id);
+  if (isLocked(p.id)) {
+    root.innerHTML = `
+      <button class="back" id="back-cat">â ${escapeHtml(cat.name)}</button>
+      <div class="prompt-block">
+        <div class="pb-cat">${escapeHtml(cat.name)}</div>
+        <h2>${escapeHtml(p.title)}</h2>
+      </div>
+      <div class="locked-banner">
+        <h3>Locked Prompt</h3>
+        <p>This prompt unlocks with your Promptdeed access code.</p>
+        <button id="go-settings">Enter Unlock Code</button>
+      </div>
+    `;
+    $('#back-cat').addEventListener('click', () => renderCategory(cat.id));
+    $('#go-settings').addEventListener('click', renderSettings);
+    return;
+  }
+  root.innerHTML = `
+    <button class="back" id="back-cat">â ${escapeHtml(cat.name)}</button>
+    <div class="prompt-block">
+      <div class="pb-cat">${escapeHtml(cat.name)} Â· #${p.id}</div>
+      <h2>${escapeHtml(p.title)}</h2>
+      <div class="pb-section-label">Prompt</div>
+      <pre id="prompt-text"></pre>
+      <button class="copy-btn" id="copy-prompt">Copy Prompt to Clipboard</button>
+    </div>
+    <div class="prompt-block">
+      <div class="pb-section-label">Example Input</div>
+      <pre id="ex-in"></pre>
+      <button class="copy-btn" id="copy-input" style="background:#B8743D">Copy Example Input</button>
+    </div>
+    <div class="prompt-block">
+      <div class="pb-section-label">Example Output</div>
+      <pre id="ex-out"></pre>
+    </div>
+  `;
+  $('#prompt-text').textContent = p.text;
+  $('#ex-in').textContent = p.input;
+  $('#ex-out').textContent = p.output;
+  $('#back-cat').addEventListener('click', () => renderCategory(cat.id));
+  $('#copy-prompt').addEventListener('click', (e) => copyToClipboard(p.text, e.currentTarget));
+  $('#copy-input').addEventListener('click', (e) => copyToClipboard(p.input, e.currentTarget));
+}
+
+function renderSettings() {
+  STATE.view = 'settings';
+  root.innerHTML = `
+    <button class="back" id="back-home">â Home</button>
+    <p class="section-title">Settings</p>
+    <div class="prompt-block">
+      <div class="settings-row">
+        <label for="code">Unlock Code</label>
+        <input class="input" id="code" type="text" placeholder="PROMPTDEED-XXXXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <div class="help">Enter the access code you received with your purchase to unlock all 50 prompts.</div>
+        <button class="btn-primary" id="apply-code">Apply Code</button>
+        <div class="status" id="code-status"></div>
+      </div>
+      <div class="unlock-state">
+        Status: <strong>${STATE.unlocked ? 'Unlocked â all 50 prompts available' : `Free preview (first ${DATA.free_prompt_count} prompts)`}</strong>
+      </div>
+      ${STATE.unlocked ? '<button class="btn-primary" id="reset-unlock" style="background:#8B2A1A">Reset to Free Preview</button>' : ''}
+    </div>
+    <div class="prompt-block">
+      <div class="pb-section-label">About Promptdeed</div>
+      <p style="margin:6px 0 0;font-size:14px">${escapeHtml(DATA.brand.subheadline)}</p>
+      <p style="margin:10px 0 0;font-size:13px;color:#6B7280">Version 1.0.0 Â· ${DATA.prompts.length} prompts Â· ${DATA.categories.length} categories</p>
+    </div>
+  `;
+  $('#back-home').addEventListener('click', renderHome);
+  const apply = () => {
+    const v = $('#code').value.trim().toUpperCase();
+    const status = $('#code-status');
+    if (v === DATA.unlock_code) {
+      localStorage.setItem('promptdeed_unlocked', '1');
+      STATE.unlocked = true;
+      status.className = 'status ok';
+      status.textContent = 'Unlocked! All 50 prompts are now available.';
+      setTimeout(renderSettings, 900);
+    } else {
+      status.className = 'status err';
+      status.textContent = 'Invalid code. Check your purchase email or contact support.';
+    }
+  };
+  $('#apply-code').addEventListener('click', apply);
+  $('#code').addEventListener('keydown', (e) => { if (e.key === 'Enter') apply(); });
+  const reset = $('#reset-unlock');
+  if (reset) reset.addEventListener('click', () => {
+    localStorage.removeItem('promptdeed_unlocked');
+    STATE.unlocked = false;
+    renderSettings();
+  });
+}
+
+/* ---------- WIRE ---------- */
+$('#brand-home').addEventListener('click', renderHome);
+$('#settings-btn').addEventListener('click', renderSettings);
+
+renderHome();
+
+/* ---------- SERVICE WORKER ---------- */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
