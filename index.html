@@ -3,333 +3,802 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1B2B4B">
-<meta name="description" content="50 production-grade AI prompts for residential real estate agents.">
+<meta name="theme-color" content="#F96302">
+<meta name="description" content="Home Depot Penny Item Finder — real-time $0.01 item alerts across all US stores.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Promptdeed">
+<meta name="apple-mobile-web-app-title" content="Penny Finder">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<title>Promptdeed â Your deed to done-for-you copy.</title>
+<title>HD Penny Finder</title>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Helvetica,Arial,sans-serif;background:#FAF7F2;color:#1A1A1A;line-height:1.5;min-height:100vh;overflow-x:hidden}
-@media (prefers-color-scheme:dark){
-  body{background:#0E1525;color:#E8E6E1}
-  .card,.prompt-block,.modal-card{background:#162033!important;border-color:#243047!important}
-  .copy-btn{background:#1B2B4B!important;color:#FAF7F2!important}
-  .input{background:#0E1525!important;color:#E8E6E1!important;border-color:#243047!important}
+:root{
+  --hd-orange:#F96302;
+  --hd-dark:#1A1A1A;
+  --hd-gray:#6B7280;
+  --hd-light:#F5F5F5;
+  --hd-green:#1A7F4B;
+  --hd-red:#CC1F1F;
+  --hd-card:#FFFFFF;
+  --hd-border:#E5E7EB;
+  --hd-text:#111827;
 }
-header{background:#1B2B4B;color:#FAF7F2;padding:18px 20px;position:sticky;top:0;z-index:10;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.brand-row{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:780px;margin:0 auto}
-.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-.brand h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
-.brand .logo{width:32px;height:32px;background:#B8743D;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FAF7F2;font-weight:800;font-size:18px}
-.tagline{font-size:13px;color:#C8CDD7;margin:4px 0 0;max-width:780px;margin-left:auto;margin-right:auto}
-nav button{background:transparent;color:#FAF7F2;border:1px solid #3a4769;padding:7px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
-nav button:hover{background:#243657}
-.container{max-width:780px;margin:0 auto;padding:20px}
-.section-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;margin:0 0 12px;font-weight:600}
-.cards{display:grid;grid-template-columns:1fr;gap:10px}
-@media (min-width:560px){.cards{grid-template-columns:1fr 1fr}}
-.card{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:16px;cursor:pointer;transition:transform .08s ease,box-shadow .08s ease,border-color .08s ease}
-.card:hover{border-color:#B8743D;box-shadow:0 4px 12px rgba(27,43,75,.08)}
-.card:active{transform:scale(.99)}
-.card h3{margin:0 0 4px;font-size:16px;font-weight:600;color:inherit}
-.card p{margin:0;font-size:13px;color:#6B7280}
-.card .meta{margin-top:10px;font-size:12px;color:#B8743D;font-weight:600}
-.prompt-list{display:flex;flex-direction:column;gap:8px}
-.prompt-item{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.prompt-item:hover{border-color:#B8743D}
-.prompt-item .pi-title{font-weight:600;font-size:15px}
-.prompt-item .pi-num{font-size:12px;color:#6B7280;flex-shrink:0}
-.prompt-item.locked{opacity:.55}
-.prompt-item.locked::after{content:"\1F512";margin-left:8px;font-size:14px}
-.back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#1B2B4B;font-size:14px;cursor:pointer;padding:8px 0 16px;font-weight:500}
-@media (prefers-color-scheme:dark){.back{color:#E8E6E1}}
-.prompt-block{background:#fff;border:1px solid #E6E1D9;border-radius:10px;padding:18px;margin-bottom:14px}
-.prompt-block h2{margin:0 0 6px;font-size:20px}
-.prompt-block .pb-cat{font-size:12px;color:#B8743D;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-.prompt-block .pb-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:700;margin:18px 0 6px}
-.prompt-block pre{white-space:pre-wrap;word-wrap:break-word;background:#F5F1EA;border:1px solid #E6E1D9;border-radius:6px;padding:12px;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.55;margin:0;max-height:none;overflow-x:auto}
-@media (prefers-color-scheme:dark){.prompt-block pre{background:#0B1322;border-color:#243047;color:#E8E6E1}}
-.copy-btn{background:#1B2B4B;color:#FAF7F2;border:none;padding:11px 18px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;width:100%;margin-top:10px}
-.copy-btn:hover{background:#243657}
-.copy-btn.copied{background:#2F7D5C}
-.locked-banner{background:#1B2B4B;color:#FAF7F2;padding:18px;border-radius:10px;text-align:center}
-.locked-banner h3{margin:0 0 6px}
-.locked-banner p{margin:0 0 12px;color:#C8CDD7;font-size:14px}
-.locked-banner button{background:#B8743D;color:#FAF7F2;border:none;padding:10px 20px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px}
-.input{width:100%;padding:11px 12px;border:1px solid #E6E1D9;border-radius:6px;font-size:15px;background:#fff;color:#1A1A1A;font-family:inherit}
-.input:focus{outline:none;border-color:#B8743D}
-.settings-row{margin-bottom:16px}
-.settings-row label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-.settings-row .help{font-size:12px;color:#6B7280;margin-top:6px}
-.btn-primary{background:#1B2B4B;color:#FAF7F2;border:none;padding:11px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px;margin-top:8px}
-.btn-primary:hover{background:#243657}
-.status{margin-top:10px;padding:10px;border-radius:6px;font-size:13px;display:none}
-.status.ok{background:#E6F4EE;color:#1F5F44;border:1px solid #BFE0CF;display:block}
-.status.err{background:#FCEBE7;color:#8B2A1A;border:1px solid #F2C8BF;display:block}
-@media (prefers-color-scheme:dark){
-  .status.ok{background:#0F2A22;color:#7AD5AC;border-color:#1F5F44}
-  .status.err{background:#2A140F;color:#F2A593;border-color:#5F2418}
+@media(prefers-color-scheme:dark){
+  :root{
+    --hd-light:#111827;
+    --hd-card:#1F2937;
+    --hd-border:#374151;
+    --hd-text:#F9FAFB;
+    --hd-gray:#9CA3AF;
+  }
+  body{background:#111827;color:#F9FAFB}
 }
-.unlock-state{padding:12px;border-radius:6px;background:#F5F1EA;border:1px solid #E6E1D9;font-size:13px;margin-bottom:14px}
-@media (prefers-color-scheme:dark){.unlock-state{background:#0F1A2C;border-color:#243047}}
-.unlock-state strong{color:#B8743D}
-.footer{text-align:center;padding:30px 20px 50px;font-size:12px;color:#6B7280}
-.modal-overlay{position:fixed;inset:0;background:rgba(14,21,37,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
-.modal-overlay.show{display:flex}
-.modal-card{background:#fff;border-radius:10px;padding:22px;max-width:420px;width:100%}
-.modal-card h3{margin:0 0 8px}
-.modal-card p{margin:0 0 12px;font-size:14px;color:#6B7280}
-.modal-card .row{display:flex;gap:8px;margin-top:8px}
-.modal-card .row button{flex:1}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--hd-light);color:var(--hd-text);line-height:1.5;min-height:100vh;overflow-x:hidden}
+a{color:var(--hd-orange);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* HEADER */
+header{background:var(--hd-orange);color:#fff;padding:0 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;height:56px}
+.hdr-logo{font-size:22px;font-weight:800;letter-spacing:-.02em;color:#fff;display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0}
+.hdr-logo .penny{background:#fff;color:var(--hd-orange);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+.hdr-nav{display:flex;gap:4px;margin-left:auto}
+.nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 12px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:background .1s}
+.nav-btn:hover,.nav-btn.active{background:rgba(255,255,255,.35)}
+.scan-badge{background:#fff;color:var(--hd-orange);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;margin-left:4px;display:none}
+.scan-badge.show{display:inline}
+
+/* MAIN LAYOUT */
+.main{max-width:1100px;margin:0 auto;padding:16px}
+.page{display:none}
+.page.active{display:block}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--hd-card);border:1px solid var(--hd-border);border-radius:10px;padding:14px 16px;text-align:center}
+.stat-card .val{font-size:28px;font-weight:800;color:var(--hd-orange)}
+.stat-card .lbl{font-size:12px;color:var(--hd-gray);font-weight:500;margin-top:2px}
+
+/* PENNY ITEMS GRID */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.section-head h2{margin:0;font-size:17px;font-weight:700}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-select,.filter-input{padding:7px 10px;border:1px solid var(--hd-border);border-radius:6px;font-size:13px;background:var(--hd-card);color:var(--hd-text);outline:none}
+.filter-select:focus,.filter-input:focus{border-color:var(--hd-orange)}
+
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.item-card{background:var(--hd-card);border:1px solid var(--hd-border);border-radius:10px;overflow:hidden;transition:box-shadow .15s}
+.item-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.item-card .img-wrap{height:140px;overflow:hidden;background:#f0f0f0;display:flex;align-items:center;justify-content:center}
+.item-card .img-wrap img{width:100%;height:100%;object-fit:contain;padding:8px}
+.item-card .img-wrap .no-img{font-size:48px;color:#ccc}
+.item-card .card-body{padding:12px 14px}
+.item-card .price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.item-card .penny-price{font-size:24px;font-weight:900;color:var(--hd-green)}
+.item-card .orig-price{font-size:13px;color:var(--hd-gray);text-decoration:line-through}
+.item-card .item-name{font-size:14px;font-weight:600;margin:0 0 4px;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item-card .item-meta{font-size:12px;color:var(--hd-gray);margin-bottom:8px}
+.item-card .store-name{font-size:12px;font-weight:600;color:var(--hd-text);margin-bottom:4px}
+.item-card .store-meta{font-size:11px;color:var(--hd-gray)}
+.item-card .card-actions{display:flex;gap:6px;margin-top:10px}
+.item-card .btn-sm{flex:1;padding:7px 6px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--hd-border);background:var(--hd-card);color:var(--hd-text);transition:background .1s}
+.item-card .btn-sm:hover{background:var(--hd-light)}
+.item-card .btn-sm.primary{background:var(--hd-orange);color:#fff;border-color:var(--hd-orange)}
+.item-card .btn-sm.primary:hover{background:#E05500}
+.new-badge{background:var(--hd-green);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--hd-gray)}
+.empty-state .icon{font-size:52px;margin-bottom:12px}
+.empty-state h3{margin:0 0 8px;font-size:18px;color:var(--hd-text)}
+.empty-state p{margin:0;font-size:14px}
+
+/* CONFIG PAGE */
+.config-section{background:var(--hd-card);border:1px solid var(--hd-border);border-radius:10px;padding:16px;margin-bottom:16px}
+.config-section h3{margin:0 0 12px;font-size:15px;font-weight:700}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+.form-row input,.form-row select{width:100%;padding:9px 11px;border:1px solid var(--hd-border);border-radius:6px;font-size:14px;background:var(--hd-card);color:var(--hd-text);outline:none}
+.form-row input:focus{border-color:var(--hd-orange)}
+.form-row .hint{font-size:12px;color:var(--hd-gray);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:background .1s}
+.btn-primary{background:var(--hd-orange);color:#fff}
+.btn-primary:hover{background:#E05500}
+.btn-secondary{background:var(--hd-light);color:var(--hd-text);border:1px solid var(--hd-border)}
+.btn-secondary:hover{background:var(--hd-border)}
+.btn-danger{background:#FEE2E2;color:var(--hd-red);border:1px solid #FECACA}
+.btn-danger:hover{background:#FECACA}
+
+/* TABLE-STYLE LIST */
+.list-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--hd-border);border-radius:8px;margin-bottom:6px;background:var(--hd-card)}
+.list-item .li-main{flex:1;min-width:0}
+.list-item .li-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item .li-sub{font-size:12px;color:var(--hd-gray)}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#D1D5DB;border-radius:20px;transition:.2s}
+.toggle input:checked + .toggle-slider{background:var(--hd-orange)}
+.toggle-slider::before{content:'';position:absolute;height:14px;width:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
+
+/* SCAN LOG */
+.log-table{width:100%;border-collapse:collapse;font-size:13px}
+.log-table th,.log-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--hd-border)}
+.log-table th{font-weight:600;color:var(--hd-gray);font-size:12px;text-transform:uppercase}
+.log-table tr:last-child td{border-bottom:none}
+.badge-running{background:#FEF3C7;color:#92400E;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-done{background:#D1FAE5;color:#065F46;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+
+/* NOTIF BANNER */
+.notif-banner{background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:none;align-items:center;gap:10px}
+.notif-banner.show{display:flex}
+.notif-banner p{margin:0;font-size:13px;flex:1}
+
+/* STATUS DOT */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;background:#D1D5DB}
+.dot.green{background:#22C55E}
+.dot.orange{background:var(--hd-orange);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#F9FAFB;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .hdr-nav .nav-btn span{display:none}
+  .hdr-nav .nav-btn{padding:7px 10px}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .items-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="brand-row">
-    <div class="brand" id="brand-home">
-      <div class="logo">P</div>
-      <h1>Promptdeed</h1>
+  <div class="hdr-inner">
+    <div class="hdr-logo" id="logo-home">
+      <div class="penny">¢</div>
+      HD Penny Finder
     </div>
-    <nav><button id="settings-btn">Settings</button></nav>
+    <nav class="hdr-nav">
+      <button class="nav-btn active" id="nav-dashboard" onclick="showPage('dashboard')">
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-btn" id="nav-config" onclick="showPage('config')">
+        <span>Config</span>
+      </button>
+      <button class="nav-btn" id="nav-logs" onclick="showPage('logs')">
+        <span>Logs</span>
+      </button>
+      <button class="nav-btn" id="btn-scan" onclick="triggerScan()">
+        ▶ Scan
+        <span class="scan-badge" id="scan-badge">Running</span>
+      </button>
+    </nav>
   </div>
-  <div class="tagline">Your deed to done-for-you copy.</div>
 </header>
 
-<main class="container" id="root"></main>
+<main class="main">
 
-<div class="footer">
-  <div>Promptdeed v1.0.0 Â· 50 prompts Â· 10 categories</div>
-  <div style="margin-top:4px">Â© 2026 Promptdeed. All prompts Â© their respective authors.</div>
-</div>
+  <!-- NOTIFICATION PERMISSION BANNER -->
+  <div class="notif-banner" id="notif-banner">
+    <span style="font-size:20px">🔔</span>
+    <p>Enable push notifications to get instant alerts when penny items are found.</p>
+    <button class="btn btn-primary" onclick="requestNotifPermission()" style="white-space:nowrap">Enable Alerts</button>
+    <button class="btn btn-secondary" onclick="dismissNotifBanner()" style="padding:9px 10px">✕</button>
+  </div>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal-card">
-    <h3 id="modal-title"></h3>
-    <p id="modal-body"></p>
-    <div class="row">
-      <button class="btn-primary" id="modal-ok" style="margin-top:0">OK</button>
+  <!-- DASHBOARD PAGE -->
+  <div class="page active" id="page-dashboard">
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-card"><div class="val" id="stat-penny">—</div><div class="lbl">Penny Items Found</div></div>
+      <div class="stat-card"><div class="val" id="stat-stores">—</div><div class="lbl">Stores Monitored</div></div>
+      <div class="stat-card"><div class="val" id="stat-skus">—</div><div class="lbl">SKUs Tracked</div></div>
+      <div class="stat-card">
+        <div class="val" style="font-size:16px;padding-top:6px" id="stat-status">
+          <span class="dot" id="status-dot"></span><span id="status-text">—</span>
+        </div>
+        <div class="lbl">Scan Status</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Penny Items <span id="items-count" style="color:var(--hd-gray);font-weight:400;font-size:14px"></span></h2>
+      <div class="filter-row">
+        <select class="filter-select" id="filter-state" onchange="applyFilters()">
+          <option value="">All States</option>
+        </select>
+        <select class="filter-select" id="filter-hours" onchange="applyFilters()">
+          <option value="72">Last 72h</option>
+          <option value="24">Last 24h</option>
+          <option value="168">Last 7 days</option>
+          <option value="9999">All time</option>
+        </select>
+        <input class="filter-input" id="filter-search" placeholder="Search items…" oninput="applyFilters()" style="width:160px">
+        <button class="btn btn-secondary" onclick="refreshDashboard()" style="padding:7px 12px;font-size:13px">↻ Refresh</button>
+      </div>
+    </div>
+
+    <div class="items-grid" id="items-grid">
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="icon">🔍</div>
+        <h3>No penny items yet</h3>
+        <p>Hit <strong>▶ Scan</strong> to start checking stores, or wait for the scheduled scan.</p>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- CONFIG PAGE -->
+  <div class="page" id="page-config">
+
+    <div class="config-section">
+      <h3>Backend Server</h3>
+      <div class="form-row">
+        <label>API Base URL</label>
+        <input id="api-url" type="url" placeholder="http://localhost:3001" value="http://localhost:3001">
+        <div class="hint">The address where scraper/server.js is running.</div>
+      </div>
+      <button class="btn btn-primary" onclick="saveApiUrl()">Save & Test</button>
+      <span id="api-test-result" style="margin-left:10px;font-size:13px"></span>
+    </div>
+
+    <div class="config-section">
+      <h3>Add Stores by ZIP Code</h3>
+      <div class="form-row">
+        <label>ZIP Code</label>
+        <input id="zip-input" type="text" placeholder="e.g. 30339" maxlength="5">
+        <div class="hint">Finds all Home Depot stores within 100 miles and adds them to your monitor list.</div>
+      </div>
+      <button class="btn btn-primary" onclick="lookupStores()" id="zip-btn">Find Stores</button>
+      <div id="zip-results" style="margin-top:12px"></div>
+    </div>
+
+    <div class="config-section">
+      <h3>Add Store Manually</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-row" style="margin:0">
+          <label>Store ID</label>
+          <input id="store-id-input" type="text" placeholder="e.g. 0121">
+        </div>
+        <div class="form-row" style="margin:0">
+          <label>Store Name</label>
+          <input id="store-name-input" type="text" placeholder="e.g. Atlanta GA">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addStoreManual()" style="margin-top:10px">Add Store</button>
+    </div>
+
+    <div class="config-section">
+      <h3>Monitored Stores</h3>
+      <div id="stores-list">
+        <p style="color:var(--hd-gray);font-size:13px">Loading…</p>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <h3>Add SKU to Track</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-row" style="margin:0">
+          <label>Item ID / SKU</label>
+          <input id="sku-input" type="text" placeholder="e.g. 206403861">
+        </div>
+        <div class="form-row" style="margin:0">
+          <label>Label (optional)</label>
+          <input id="sku-label" type="text" placeholder="e.g. Halloween Decor">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addSku()" style="margin-top:10px">Add SKU</button>
+    </div>
+
+    <div class="config-section">
+      <h3>Tracked SKUs</h3>
+      <div id="skus-list">
+        <p style="color:var(--hd-gray);font-size:13px">Loading…</p>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <h3>Push Notifications</h3>
+      <p style="font-size:13px;color:var(--hd-gray);margin:0 0 12px">Get instant browser push alerts when new penny items are discovered.</p>
+      <button class="btn btn-primary" id="notif-btn" onclick="toggleNotifications()">Enable Push Notifications</button>
+      <p id="notif-status" style="margin:8px 0 0;font-size:13px;color:var(--hd-gray)"></p>
+    </div>
+
+  </div>
+
+  <!-- LOGS PAGE -->
+  <div class="page" id="page-logs">
+    <div class="config-section">
+      <h3>Recent Scan Logs</h3>
+      <div id="log-content">
+        <p style="color:var(--hd-gray);font-size:13px">Loading…</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
 
 <script>
-/* ---------- DATA ---------- */
-const DATA = {"brand":{"name":"Promptdeed","tagline":"Your deed to done-for-you copy.","headline":"Stop Getting Generic Output. Start Getting Copy That Closes.","subheadline":"For busy residential agents, Promptdeed turns ChatGPT and Claude into a copywriter who actually knows real estate.","voice":"Direct, Practical, Agent-fluent","audience":"US residential real estate agents"},"categories":[{"id":1,"name":"Listing Descriptions & Property Marketing","description":"Write compelling MLS and marketing copy for listings","order":1},{"id":2,"name":"Social Media Content (Instagram, Facebook, TikTok)","description":"Engaging captions, reels scripts, and post hooks","order":2},{"id":3,"name":"Lead Follow-Up & Nurture Emails","description":"Email sequences that convert leads into clients","order":3},{"id":4,"name":"FSBO & Expired Listing Scripts","description":"Conversion scripts for hard-to-win seller leads","order":4},{"id":5,"name":"Buyer Consultation & Discovery","description":"Questions and frameworks for buyer meetings","order":5},{"id":6,"name":"Seller Listing Presentations","description":"Win listings with confidence","order":6},{"id":7,"name":"Open House Marketing & Scripts","description":"Drive traffic and convert open house visitors","order":7},{"id":8,"name":"Market Reports & Neighborhood Guides","description":"Position yourself as the local expert","order":8},{"id":9,"name":"Negotiation, Offers & Closing Communication","description":"Communicate clearly through the deal","order":9},{"id":10,"name":"Personal Branding, Bio & Video Scripts","description":"Build your brand and on-camera presence","order":10}],"prompts":[{"id":1,"category_id":1,"idx":1,"title":"Luxury Listing Description (MLS-Optimized)","text":"You are an expert real estate copywriter who writes for luxury and high-end residential listings.\n\nYour job: write an MLS listing description that is both editorially compelling AND MLS-compliant â no fair-housing violations, no exaggerated claims about returns, no language that could be construed as steering.\n\nINPUTS:\n[PROPERTY ADDRESS]\n[LIST PRICE]\n[BEDROOMS] / [BATHROOMS] / [SQUARE FEET] / [LOT SIZE] / [YEAR BUILT]\n[KEY FEATURES] (comma-separated)\n[NEIGHBORHOOD]\n[UNIQUE SELLING POINTS]\n[COMPARABLE CONTEXT]\n[TARGET BUYER]\n[TONE] (e.g. aspirational, editorial, sophisticated)\n[WORD COUNT]\n\nOUTPUT FORMAT:\n- Lead with a magnetic opening sentence that paints a lifestyle picture.\n- Body in 2â4 short paragraphs (no bullet lists). Weave in 3â5 of the strongest features naturally â don't list every input.\n- Close with a paragraph that anchors location and a soft call-to-tour.\n- Stay within Â±10% of [WORD COUNT].\n- Avoid: \"must see,\" \"won't last,\" \"motivated seller,\" any reference to protected classes, any school-quality claim.\n\nReturn only the description. No headings, no explanations.","input":"[PROPERTY ADDRESS]: 4821 Harborview Lane, Newport Beach, CA\n[LIST PRICE]: $3,250,000\n[BEDROOMS]: 5\n[BATHROOMS]: 4 full, 1 half\n[SQUARE FEET]: 4,850\n[LOT SIZE]: 0.38 acres\n[YEAR BUILT]: 2019\n[KEY FEATURES]: chef's kitchen with Sub-Zero and Wolf appliances, primary suite with ocean-view balcony, temperature-controlled wine cellar, resort-style pool and spa, 4-car garage, whole-home Lutron smart lighting, solar panels\n[NEIGHBORHOOD]: Newport Beach, steps from Back Bay Nature Preserve\n[UNIQUE SELLING POINTS]: unobstructed Catalina Island views, no HOA, corner lot with maximum privacy\n[COMPARABLE CONTEXT]: similar homes sold $3.1Mâ$3.5M in past 6 months\n[TARGET BUYER]: affluent move-up buyer or second-home buyer seeking coastal California lifestyle\n[TONE]: aspirational, editorial, sophisticated â think Architectural Digest\n[WORD COUNT]: 280","output":"Rarely does a residence so effortlessly merge architectural precision with the boundless spirit of the California coast. Set on a private corner lot in one of Newport Beach's most coveted enclaves, 4821 Harborview Lane is a 2019-built masterwork where every detail has been curated for those who refuse to compromise.\n\nFive bedrooms and four-and-a-half baths unfold across 4,850 square feet of light-drenched living space, anchored by a chef's kitchen outfitted with Sub-Zero refrigeration and Wolf professional appliances. Entertain without limitation â a temperature-controlled wine cellar awaits your collection while the resort-style pool and spa transform the 0.38-acre grounds into a private retreat.\n\nAscend to the primary suite and step onto your private balcony where unobstructed views of Catalina Island greet each morning. Whole-home Lutron smart lighting, owned solar panels, and a 4-car garage ensure every modern convenience is accounted for â without the constraints of an HOA.\n\nSteps from the Back Bay Nature Preserve and minutes from Newport Beach's most celebrated dining and coastline, this is more than a home â it's a deed to the coastal California lifestyle most can only imagine. Schedule your private tour today."},{"id":2,"category_id":1,"idx":2,"title":"Entry-Level Home Description for First-Time Buyers","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":3,"category_id":1,"idx":3,"title":"Fixer-Upper / Investor Listing Description","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":4,"category_id":1,"idx":4,"title":"Luxury Estate Property Brochure Copy","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":5,"category_id":1,"idx":5,"title":"Just-Listed Multi-Channel Marketing Kit","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":6,"category_id":2,"idx":1,"title":"Instagram Carousel: Just-Sold Story","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":7,"category_id":2,"idx":2,"title":"30-Second Reel Script: Neighborhood Spotlight","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":8,"category_id":2,"idx":3,"title":"Facebook Post: Open House Invitation","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":9,"category_id":2,"idx":4,"title":"TikTok Hook: Common Buyer Mistake","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":10,"category_id":2,"idx":5,"title":"Weekly Content Calendar (7 Posts)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":11,"category_id":3,"idx":1,"title":"Cold Lead Re-Engagement Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":12,"category_id":3,"idx":2,"title":"5-Email Buyer Nurture Sequence","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":13,"category_id":3,"idx":3,"title":"Post-Open-House Follow-Up Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":14,"category_id":3,"idx":4,"title":"Sphere of Influence Quarterly Check-In","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":15,"category_id":3,"idx":5,"title":"Lost Lead Win-Back Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":16,"category_id":4,"idx":1,"title":"FSBO Cold-Call Opening Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":17,"category_id":4,"idx":2,"title":"FSBO Voicemail Script (45 seconds)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":18,"category_id":4,"idx":3,"title":"Expired Listing First-Contact Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":19,"category_id":4,"idx":4,"title":"Expired Listing Letter (Direct Mail)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":20,"category_id":4,"idx":5,"title":"FSBO Objection-Handling Cheat Sheet","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":21,"category_id":5,"idx":1,"title":"Buyer Discovery Questionnaire (25 Questions)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":22,"category_id":5,"idx":2,"title":"First-Time Buyer Education Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":23,"category_id":5,"idx":3,"title":"Buyer Needs vs. Wants Worksheet Generator","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":24,"category_id":5,"idx":4,"title":"Pre-Approval Conversation Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":25,"category_id":5,"idx":5,"title":"Buyer Consultation Recap Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":26,"category_id":6,"idx":1,"title":"Pre-Listing Appointment Email + Agenda","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":27,"category_id":6,"idx":2,"title":"Listing Presentation Outline (10 Slides)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":28,"category_id":6,"idx":3,"title":"Pricing Strategy Talking Points","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":29,"category_id":6,"idx":4,"title":"Seller Net Sheet Explanation Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":30,"category_id":6,"idx":5,"title":"Commission Objection Response Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":31,"category_id":7,"idx":1,"title":"Open House Multi-Channel Promo Pack","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":32,"category_id":7,"idx":2,"title":"Open House Visitor Sign-In Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":33,"category_id":7,"idx":3,"title":"Door-Knocking Script for Open House Promotion","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":34,"category_id":7,"idx":4,"title":"Open House Follow-Up Email (24-Hour)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":35,"category_id":7,"idx":5,"title":"Open House Neighbor Invitation Letter","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":36,"category_id":8,"idx":1,"title":"Monthly Market Update Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":37,"category_id":8,"idx":2,"title":"Neighborhood Guide (1,000-Word Blog Post)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":38,"category_id":8,"idx":3,"title":"Quarterly Market Report PDF Outline","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":39,"category_id":8,"idx":4,"title":"School District Comparison Guide","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":40,"category_id":8,"idx":5,"title":"\"Is Now a Good Time to Buy?\" Article","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":41,"category_id":9,"idx":1,"title":"Offer Submission Cover Letter","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":42,"category_id":9,"idx":2,"title":"Multiple-Offer Strategy Email to Buyer","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":43,"category_id":9,"idx":3,"title":"Counter-Offer Communication Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":44,"category_id":9,"idx":4,"title":"Inspection Negotiation Talking Points","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":45,"category_id":9,"idx":5,"title":"Closing Day Communication Email","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":46,"category_id":10,"idx":1,"title":"Agent Bio (Long-Form Website Version)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":47,"category_id":10,"idx":2,"title":"Short Agent Bio (Social Media)","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":48,"category_id":10,"idx":3,"title":"60-Second \"About Me\" Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":49,"category_id":10,"idx":4,"title":"Listing Walk-Through Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"},{"id":50,"category_id":10,"idx":5,"title":"Year-End Recap Video Script","text":"Coming soon â full prompt unlocks in Promptdeed v1.1.\n\nThis preview is part of the Promptdeed launch package. The full library of 50 production-grade prompts (with worked examples and field-by-field input templates) is being prepared for the next release. Your unlock code already grants you lifetime access â you'll receive the v1.1 update automatically.\n\nIn the meantime, see Prompt #1 (\"Luxury Listing Description\") for a complete example of what every prompt in this library will look like.","input":"[Field-by-field example inputs ship with v1.1.]","output":"[Worked example output ships with v1.1.]"}],"free_prompt_count":5,"unlock_code":"PROMPTDEED-LAUNCH-2026"};
+// ---------- STATE ----------
+let API_BASE = localStorage.getItem('hd_api_base') || 'http://localhost:3001';
+let allItems = [];
+let pushSubscription = null;
+let vapidPublicKey = null;
+let statusPollTimer = null;
 
-/* ---------- STATE ---------- */
-const STATE = {
-  unlocked: localStorage.getItem('promptdeed_unlocked') === '1',
-  view: 'home',
-  catId: null,
-  promptId: null
-};
+// ---------- INIT ----------
+document.getElementById('api-url').value = API_BASE;
+document.addEventListener('DOMContentLoaded', () => {
+  loadDashboard();
+  checkNotifPermission();
+  startStatusPoll();
+});
+document.getElementById('logo-home').onclick = () => showPage('dashboard');
 
-/* ---------- HELPERS ---------- */
-const $ = (sel, root = document) => root.querySelector(sel);
-const root = $('#root');
-const modal = $('#modal');
-
-function showModal(title, body) {
-  $('#modal-title').textContent = title;
-  $('#modal-body').textContent = body;
-  modal.classList.add('show');
-}
-$('#modal-ok').addEventListener('click', () => modal.classList.remove('show'));
-modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
-
-function isLocked(promptIdx) {
-  // first 5 prompts (by global ID 1-5) are free; rest locked unless unlocked
-  return !STATE.unlocked && promptIdx > DATA.free_prompt_count;
+// ---------- PAGE NAV ----------
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'config') loadConfig();
+  if (name === 'logs') loadLogs();
 }
 
-function copyToClipboard(text, btn) {
-  const fallback = () => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch (e) {}
-    document.body.removeChild(ta);
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).catch(fallback);
-  } else { fallback(); }
-  if (btn) {
-    btn.classList.add('copied');
-    const orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+// ---------- API HELPER ----------
+async function api(path, opts = {}) {
+  const url = API_BASE + path;
+  const resp = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  });
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  return resp.json();
+}
+
+// ---------- DASHBOARD ----------
+async function loadDashboard() {
+  try {
+    const [status, items] = await Promise.all([
+      api('/api/status'),
+      api('/api/penny-items?hours=72&limit=500'),
+    ]);
+    allItems = items;
+    vapidPublicKey = status.vapidPublicKey;
+
+    document.getElementById('stat-penny').textContent = status.stats.pennyCount;
+    document.getElementById('stat-stores').textContent = status.stats.storesEnabled;
+    document.getElementById('stat-skus').textContent = status.stats.skusEnabled;
+
+    updateScanStatus(status.scanRunning);
+    populateStateFilter(items);
+    applyFilters();
+  } catch (e) {
+    document.getElementById('items-grid').innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="icon">⚠️</div>
+        <h3>Can't reach the scraper</h3>
+        <p>Make sure the backend is running: <code>cd scraper && npm start</code><br>API: ${API_BASE}</p>
+      </div>`;
   }
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function refreshDashboard() { loadDashboard(); }
+
+function updateScanStatus(running) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  const badge = document.getElementById('scan-badge');
+  if (running) {
+    dot.className = 'dot orange';
+    txt.textContent = 'Scanning…';
+    badge.classList.add('show');
+  } else {
+    dot.className = 'dot green';
+    txt.textContent = 'Idle';
+    badge.classList.remove('show');
+  }
 }
 
-/* ---------- VIEWS ---------- */
-function renderHome() {
-  STATE.view = 'home'; STATE.catId = null; STATE.promptId = null;
-  const intro = `
-    <p class="section-title">Browse Categories</p>
-    <div class="unlock-state">
-      ${STATE.unlocked
-        ? '<strong>Unlocked.</strong> All 50 prompts available.'
-        : `<strong>Free preview.</strong> First ${DATA.free_prompt_count} prompts unlocked. Enter your code in Settings to unlock all 50.`}
-    </div>
-  `;
-  const cards = DATA.categories.map((c) => {
-    const promptCount = DATA.prompts.filter((p) => p.category_id === c.id).length;
-    return `
-      <div class="card" data-cat="${c.id}">
-        <h3>${escapeHtml(c.name)}</h3>
-        <p>${escapeHtml(c.description)}</p>
-        <div class="meta">${promptCount} prompts</div>
-      </div>
-    `;
-  }).join('');
-  root.innerHTML = intro + '<div class="cards">' + cards + '</div>';
-  root.querySelectorAll('.card').forEach((el) => {
-    el.addEventListener('click', () => renderCategory(parseInt(el.dataset.cat, 10)));
+function populateStateFilter(items) {
+  const states = [...new Set(items.map(i => i.state).filter(Boolean))].sort();
+  const sel = document.getElementById('filter-state');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All States</option>' +
+    states.map(s => `<option value="${s}"${s===cur?' selected':''}>${s}</option>`).join('');
+}
+
+function applyFilters() {
+  const state = document.getElementById('filter-state').value;
+  const search = document.getElementById('filter-search').value.toLowerCase();
+  const hours = parseInt(document.getElementById('filter-hours').value, 10);
+  const now = Date.now() / 1000;
+
+  let filtered = allItems.filter(item => {
+    if (state && item.state !== state) return false;
+    if (hours < 9999 && now - item.last_seen > hours * 3600) return false;
+    if (search) {
+      const hay = ((item.product_label || '') + ' ' + (item.model_number || '') +
+        ' ' + (item.brand_name || '') + ' ' + (item.store_name || '')).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
   });
-}
 
-function renderCategory(catId) {
-  STATE.view = 'category'; STATE.catId = catId;
-  const cat = DATA.categories.find((c) => c.id === catId);
-  const items = DATA.prompts.filter((p) => p.category_id === catId);
-  const list = items.map((p) => {
-    const locked = isLocked(p.id);
-    return `
-      <div class="prompt-item ${locked ? 'locked' : ''}" data-pid="${p.id}">
-        <div class="pi-title">${escapeHtml(p.title)}</div>
-        <div class="pi-num">#${p.id}</div>
-      </div>
-    `;
-  }).join('');
-  root.innerHTML = `
-    <button class="back" id="back-home">â All Categories</button>
-    <p class="section-title">${escapeHtml(cat.name)}</p>
-    <div class="prompt-list">${list}</div>
-  `;
-  $('#back-home').addEventListener('click', renderHome);
-  root.querySelectorAll('.prompt-item').forEach((el) => {
-    el.addEventListener('click', () => renderPrompt(parseInt(el.dataset.pid, 10)));
-  });
-}
+  const grid = document.getElementById('items-grid');
+  document.getElementById('items-count').textContent = filtered.length
+    ? `(${filtered.length})` : '';
 
-function renderPrompt(pid) {
-  STATE.view = 'prompt'; STATE.promptId = pid;
-  const p = DATA.prompts.find((x) => x.id === pid);
-  const cat = DATA.categories.find((c) => c.id === p.category_id);
-  if (isLocked(p.id)) {
-    root.innerHTML = `
-      <button class="back" id="back-cat">â ${escapeHtml(cat.name)}</button>
-      <div class="prompt-block">
-        <div class="pb-cat">${escapeHtml(cat.name)}</div>
-        <h2>${escapeHtml(p.title)}</h2>
-      </div>
-      <div class="locked-banner">
-        <h3>Locked Prompt</h3>
-        <p>This prompt unlocks with your Promptdeed access code.</p>
-        <button id="go-settings">Enter Unlock Code</button>
-      </div>
-    `;
-    $('#back-cat').addEventListener('click', () => renderCategory(cat.id));
-    $('#go-settings').addEventListener('click', renderSettings);
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="icon">¢</div>
+        <h3>No penny items found yet</h3>
+        <p>Click <strong>▶ Scan</strong> to search now, or adjust your filters.</p>
+      </div>`;
     return;
   }
-  root.innerHTML = `
-    <button class="back" id="back-cat">â ${escapeHtml(cat.name)}</button>
-    <div class="prompt-block">
-      <div class="pb-cat">${escapeHtml(cat.name)} Â· #${p.id}</div>
-      <h2>${escapeHtml(p.title)}</h2>
-      <div class="pb-section-label">Prompt</div>
-      <pre id="prompt-text"></pre>
-      <button class="copy-btn" id="copy-prompt">Copy Prompt to Clipboard</button>
-    </div>
-    <div class="prompt-block">
-      <div class="pb-section-label">Example Input</div>
-      <pre id="ex-in"></pre>
-      <button class="copy-btn" id="copy-input" style="background:#B8743D">Copy Example Input</button>
-    </div>
-    <div class="prompt-block">
-      <div class="pb-section-label">Example Output</div>
-      <pre id="ex-out"></pre>
-    </div>
-  `;
-  $('#prompt-text').textContent = p.text;
-  $('#ex-in').textContent = p.input;
-  $('#ex-out').textContent = p.output;
-  $('#back-cat').addEventListener('click', () => renderCategory(cat.id));
-  $('#copy-prompt').addEventListener('click', (e) => copyToClipboard(p.text, e.currentTarget));
-  $('#copy-input').addEventListener('click', (e) => copyToClipboard(p.input, e.currentTarget));
+
+  grid.innerHTML = filtered.map(item => renderItemCard(item)).join('');
 }
 
-function renderSettings() {
-  STATE.view = 'settings';
-  root.innerHTML = `
-    <button class="back" id="back-home">â Home</button>
-    <p class="section-title">Settings</p>
-    <div class="prompt-block">
-      <div class="settings-row">
-        <label for="code">Unlock Code</label>
-        <input class="input" id="code" type="text" placeholder="PROMPTDEED-XXXXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
-        <div class="help">Enter the access code you received with your purchase to unlock all 50 prompts.</div>
-        <button class="btn-primary" id="apply-code">Apply Code</button>
-        <div class="status" id="code-status"></div>
+function renderItemCard(item) {
+  const isNew = (Date.now() / 1000 - item.last_seen) < 3600;
+  const savings = item.original_price
+    ? `<span class="orig-price">$${item.original_price.toFixed(2)}</span>`
+    : '';
+  const imgHtml = item.image_url
+    ? `<img src="${escHtml(item.image_url)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=no-img>🏠</span>'">`
+    : `<span class="no-img">🏠</span>`;
+  const storeLine = [item.city, item.state, item.zip].filter(Boolean).join(', ');
+
+  return `
+    <div class="item-card">
+      <div class="img-wrap">${imgHtml}</div>
+      <div class="card-body">
+        <div class="price-row">
+          <span class="penny-price">$0.01</span>
+          ${savings}
+          ${isNew ? '<span class="new-badge">New</span>' : ''}
+        </div>
+        <div class="item-name">${escHtml(item.product_label || 'Unknown Product')}</div>
+        <div class="item-meta">${escHtml(item.brand_name || '')} ${item.model_number ? '· ' + escHtml(item.model_number) : ''}</div>
+        <div class="store-name">📍 ${escHtml(item.store_name || 'Store #' + item.store_id)}</div>
+        <div class="store-meta">${escHtml(storeLine)} · Store #${escHtml(item.store_id)}</div>
+        <div class="card-actions">
+          <a class="btn-sm primary" href="https://www.homedepot.com/p/${escHtml(item.item_id)}" target="_blank" rel="noopener">View on HD</a>
+          <button class="btn-sm" onclick="copyItem(${JSON.stringify({id:item.item_id,name:item.product_label,store:item.store_name,loc:storeLine})})">Copy Info</button>
+        </div>
       </div>
-      <div class="unlock-state">
-        Status: <strong>${STATE.unlocked ? 'Unlocked â all 50 prompts available' : `Free preview (first ${DATA.free_prompt_count} prompts)`}</strong>
+    </div>`;
+}
+
+function copyItem(item) {
+  const text = `PENNY ITEM FOUND!\n${item.name}\nSKU: ${item.id}\nStore: ${item.store}\n${item.loc}\nPrice: $0.01\nhttps://www.homedepot.com/p/${item.id}`;
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!'));
+}
+
+// ---------- SCAN ----------
+async function triggerScan() {
+  try {
+    const r = await api('/api/scan/start', { method: 'POST' });
+    toast(r.message || 'Scan started');
+    updateScanStatus(true);
+    setTimeout(() => loadDashboard(), 3000);
+  } catch (e) {
+    toast('Failed to start scan. Is the backend running?', true);
+  }
+}
+
+// ---------- CONFIG ----------
+async function loadConfig() {
+  loadStoresList();
+  loadSkusList();
+  checkNotifPermission();
+}
+
+function saveApiUrl() {
+  const url = document.getElementById('api-url').value.trim().replace(/\/+$/, '');
+  if (!url) return;
+  API_BASE = url;
+  localStorage.setItem('hd_api_base', url);
+  const el = document.getElementById('api-test-result');
+  el.textContent = 'Testing…';
+  api('/api/status')
+    .then(() => { el.style.color = 'var(--hd-green)'; el.textContent = '✓ Connected'; })
+    .catch(() => { el.style.color = 'var(--hd-red)'; el.textContent = '✗ Cannot connect'; });
+}
+
+async function lookupStores() {
+  const zip = document.getElementById('zip-input').value.trim();
+  if (!zip || !/^\d{5}$/.test(zip)) { toast('Enter a valid 5-digit ZIP', true); return; }
+  const btn = document.getElementById('zip-btn');
+  btn.disabled = true; btn.textContent = 'Searching…';
+  try {
+    const stores = await api('/api/stores/lookup', {
+      method: 'POST',
+      body: JSON.stringify({ zip }),
+    });
+    const div = document.getElementById('zip-results');
+    if (!stores.length) { div.innerHTML = '<p style="color:var(--hd-gray);font-size:13px">No stores found near that ZIP.</p>'; return; }
+    div.innerHTML = stores.map(s => `
+      <div class="list-item">
+        <div class="li-main">
+          <div class="li-title">${escHtml(s.name)} #${escHtml(s.id)}</div>
+          <div class="li-sub">${escHtml(s.city)}, ${escHtml(s.state)} ${escHtml(s.zip || '')} ${s.distance ? '· ' + s.distance.toFixed(1) + ' mi' : ''}</div>
+        </div>
+        <button class="btn btn-primary" style="font-size:12px;padding:6px 10px" onclick="addStoreFromResult('${escHtml(s.id)}','${escHtml(s.name)}','${escHtml(s.city)}','${escHtml(s.state)}','${escHtml(s.zip||'')}',this)">Add</button>
       </div>
-      ${STATE.unlocked ? '<button class="btn-primary" id="reset-unlock" style="background:#8B2A1A">Reset to Free Preview</button>' : ''}
-    </div>
-    <div class="prompt-block">
-      <div class="pb-section-label">About Promptdeed</div>
-      <p style="margin:6px 0 0;font-size:14px">${escapeHtml(DATA.brand.subheadline)}</p>
-      <p style="margin:10px 0 0;font-size:13px;color:#6B7280">Version 1.0.0 Â· ${DATA.prompts.length} prompts Â· ${DATA.categories.length} categories</p>
-    </div>
-  `;
-  $('#back-home').addEventListener('click', renderHome);
-  const apply = () => {
-    const v = $('#code').value.trim().toUpperCase();
-    const status = $('#code-status');
-    if (v === DATA.unlock_code) {
-      localStorage.setItem('promptdeed_unlocked', '1');
-      STATE.unlocked = true;
-      status.className = 'status ok';
-      status.textContent = 'Unlocked! All 50 prompts are now available.';
-      setTimeout(renderSettings, 900);
-    } else {
-      status.className = 'status err';
-      status.textContent = 'Invalid code. Check your purchase email or contact support.';
+    `).join('');
+  } catch (e) {
+    toast('Store lookup failed', true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Find Stores';
+  }
+}
+
+async function addStoreFromResult(id, name, city, state, zip, btn) {
+  try {
+    await api('/api/stores', { method: 'POST', body: JSON.stringify({ id, name, city, state, zip }) });
+    btn.textContent = '✓ Added'; btn.disabled = true;
+    toast(`Added ${name}`);
+    loadStoresList();
+  } catch (e) { toast('Failed to add store', true); }
+}
+
+async function addStoreManual() {
+  const id = document.getElementById('store-id-input').value.trim();
+  const name = document.getElementById('store-name-input').value.trim();
+  if (!id || !name) { toast('Store ID and name required', true); return; }
+  try {
+    await api('/api/stores', { method: 'POST', body: JSON.stringify({ id, name }) });
+    document.getElementById('store-id-input').value = '';
+    document.getElementById('store-name-input').value = '';
+    toast('Store added');
+    loadStoresList();
+  } catch (e) { toast('Failed', true); }
+}
+
+async function loadStoresList() {
+  const div = document.getElementById('stores-list');
+  try {
+    const stores = await api('/api/stores');
+    if (!stores.length) { div.innerHTML = '<p style="color:var(--hd-gray);font-size:13px">No stores yet.</p>'; return; }
+    div.innerHTML = stores.map(s => `
+      <div class="list-item">
+        <div class="li-main">
+          <div class="li-title">#${escHtml(s.id)} ${escHtml(s.name)}</div>
+          <div class="li-sub">${escHtml(s.city||'')}${s.state?', '+escHtml(s.state):''} ${escHtml(s.zip||'')}</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" ${s.enabled?'checked':''} onchange="toggleStore('${escHtml(s.id)}',this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+        <button class="btn btn-danger" style="font-size:12px;padding:6px 8px" onclick="deleteStore('${escHtml(s.id)}',this)">✕</button>
+      </div>
+    `).join('');
+  } catch (e) { div.innerHTML = '<p style="color:var(--hd-red);font-size:13px">Failed to load stores.</p>'; }
+}
+
+async function toggleStore(id, enabled) {
+  try { await api('/api/stores/' + id, { method: 'PATCH', body: JSON.stringify({ enabled }) }); }
+  catch (e) { toast('Failed', true); }
+}
+
+async function deleteStore(id, btn) {
+  if (!confirm('Remove this store from monitoring?')) return;
+  try {
+    await api('/api/stores/' + id, { method: 'DELETE' });
+    btn.closest('.list-item').remove();
+    toast('Store removed');
+  } catch (e) { toast('Failed', true); }
+}
+
+async function addSku() {
+  const itemId = document.getElementById('sku-input').value.trim();
+  const label = document.getElementById('sku-label').value.trim();
+  if (!itemId) { toast('Item ID required', true); return; }
+  try {
+    await api('/api/skus', { method: 'POST', body: JSON.stringify({ itemId, label: label || null }) });
+    document.getElementById('sku-input').value = '';
+    document.getElementById('sku-label').value = '';
+    toast('SKU added');
+    loadSkusList();
+  } catch (e) { toast('Failed', true); }
+}
+
+async function loadSkusList() {
+  const div = document.getElementById('skus-list');
+  try {
+    const skus = await api('/api/skus');
+    if (!skus.length) { div.innerHTML = '<p style="color:var(--hd-gray);font-size:13px">No SKUs yet.</p>'; return; }
+    div.innerHTML = skus.map(s => `
+      <div class="list-item">
+        <div class="li-main">
+          <div class="li-title">${escHtml(s.label || s.item_id)}</div>
+          <div class="li-sub">SKU: ${escHtml(s.item_id)} · Added by ${escHtml(s.added_by)}</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" ${s.enabled?'checked':''} onchange="toggleSku('${escHtml(s.item_id)}',this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+        <button class="btn btn-danger" style="font-size:12px;padding:6px 8px" onclick="deleteSku('${escHtml(s.item_id)}',this)">✕</button>
+      </div>
+    `).join('');
+  } catch (e) { div.innerHTML = '<p style="color:var(--hd-red);font-size:13px">Failed to load SKUs.</p>'; }
+}
+
+async function toggleSku(itemId, enabled) {
+  try { await api('/api/skus/' + itemId, { method: 'PATCH', body: JSON.stringify({ enabled }) }); }
+  catch (e) { toast('Failed', true); }
+}
+
+async function deleteSku(itemId, btn) {
+  if (!confirm('Remove this SKU?')) return;
+  try {
+    await api('/api/skus/' + itemId, { method: 'DELETE' });
+    btn.closest('.list-item').remove();
+    toast('SKU removed');
+  } catch (e) { toast('Failed', true); }
+}
+
+// ---------- LOGS ----------
+async function loadLogs() {
+  const div = document.getElementById('log-content');
+  try {
+    const logs = await api('/api/scan/logs');
+    if (!logs.length) { div.innerHTML = '<p style="color:var(--hd-gray);font-size:13px">No scans yet.</p>'; return; }
+    div.innerHTML = `
+      <table class="log-table">
+        <thead><tr>
+          <th>Started</th><th>Duration</th><th>Stores</th><th>Items</th><th>Penny</th><th>Errors</th><th>Status</th>
+        </tr></thead>
+        <tbody>${logs.map(l => {
+          const dur = l.finished_at ? ((l.finished_at - l.started_at) + 's') : '—';
+          const d = new Date(l.started_at * 1000);
+          const ts = d.toLocaleString();
+          const statusBadge = l.status === 'running'
+            ? '<span class="badge-running">Running</span>'
+            : '<span class="badge-done">Done</span>';
+          return `<tr>
+            <td>${ts}</td><td>${dur}</td>
+            <td>${l.stores_checked}</td><td>${l.items_checked}</td>
+            <td style="color:var(--hd-green);font-weight:700">${l.penny_found}</td>
+            <td>${l.errors}</td><td>${statusBadge}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+  } catch (e) {
+    div.innerHTML = '<p style="color:var(--hd-red);font-size:13px">Failed to load logs.</p>';
+  }
+}
+
+// ---------- PUSH NOTIFICATIONS ----------
+function checkNotifPermission() {
+  const btn = document.getElementById('notif-btn');
+  const status = document.getElementById('notif-status');
+  const banner = document.getElementById('notif-banner');
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Not supported in this browser'; }
+    banner.classList.remove('show');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    if (btn) { btn.textContent = 'Notifications Enabled ✓'; btn.className = 'btn btn-secondary'; }
+    if (status) status.textContent = 'Push notifications are active.';
+    banner.classList.remove('show');
+  } else if (Notification.permission === 'denied') {
+    if (btn) { btn.disabled = true; btn.textContent = 'Notifications Blocked'; }
+    if (status) status.textContent = 'Notifications are blocked. Enable in browser settings.';
+    banner.classList.remove('show');
+  } else {
+    banner.classList.add('show');
+  }
+}
+
+function dismissNotifBanner() {
+  document.getElementById('notif-banner').classList.remove('show');
+  localStorage.setItem('hd_notif_dismissed', '1');
+}
+
+async function requestNotifPermission() {
+  if (!('Notification' in window)) { toast('Push not supported', true); return; }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    await subscribeToPush();
+    checkNotifPermission();
+    toast('Notifications enabled!');
+  } else {
+    toast('Notification permission denied', true);
+    checkNotifPermission();
+  }
+}
+
+async function toggleNotifications() {
+  if (Notification.permission !== 'granted') {
+    await requestNotifPermission();
+  } else if (pushSubscription) {
+    await unsubscribeFromPush();
+  } else {
+    await subscribeToPush();
+  }
+  checkNotifPermission();
+}
+
+async function subscribeToPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    if (!vapidPublicKey) {
+      const st = await api('/api/status');
+      vapidPublicKey = st.vapidPublicKey;
     }
-  };
-  $('#apply-code').addEventListener('click', apply);
-  $('#code').addEventListener('keydown', (e) => { if (e.key === 'Enter') apply(); });
-  const reset = $('#reset-unlock');
-  if (reset) reset.addEventListener('click', () => {
-    localStorage.removeItem('promptdeed_unlocked');
-    STATE.unlocked = false;
-    renderSettings();
-  });
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+    });
+    pushSubscription = sub;
+    await api('/api/push/subscribe', { method: 'POST', body: JSON.stringify(sub) });
+    toast('Subscribed to push notifications');
+  } catch (e) {
+    console.error(e);
+    toast('Push subscribe failed: ' + e.message, true);
+  }
 }
 
-/* ---------- WIRE ---------- */
-$('#brand-home').addEventListener('click', renderHome);
-$('#settings-btn').addEventListener('click', renderSettings);
+async function unsubscribeFromPush() {
+  if (!pushSubscription) return;
+  try {
+    const endpoint = pushSubscription.endpoint;
+    await pushSubscription.unsubscribe();
+    pushSubscription = null;
+    await api('/api/push/subscribe', { method: 'DELETE', body: JSON.stringify({ endpoint }) });
+    toast('Unsubscribed from push notifications');
+  } catch (e) {
+    toast('Unsubscribe failed', true);
+  }
+}
 
-renderHome();
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
 
-/* ---------- SERVICE WORKER ---------- */
+// ---------- STATUS POLL ----------
+function startStatusPoll() {
+  statusPollTimer = setInterval(async () => {
+    try {
+      const st = await api('/api/status');
+      updateScanStatus(st.scanRunning);
+      document.getElementById('stat-penny').textContent = st.stats.pennyCount;
+    } catch (e) { /* backend offline */ }
+  }, 15000);
+}
+
+// ---------- UTILS ----------
+function escHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+let toastTimer;
+function toast(msg, isErr = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isErr ? '#CC1F1F' : '#111827';
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ---------- SERVICE WORKER ----------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').catch(() => {});
