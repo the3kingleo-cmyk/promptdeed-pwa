@@ -27,7 +27,7 @@ const readline = require('readline');
 const { chromium } = require('playwright');
 
 const PROFILE_DIR = path.join(__dirname, '.browser-profile'); // remembers your logins
-const STORE_HANDLE = process.env.SHOPIFY_STORE_HANDLE || 'prokitdigital'; // admin.shopify.com/store/<this>
+const STORE_HANDLE = process.env.SHOPIFY_STORE_HANDLE || 'vyycqv-vf'; // admin.shopify.com/store/<this>
 
 // small helper: wait for the user to press Enter in the terminal
 function waitForEnter(message) {
