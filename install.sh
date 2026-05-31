@@ -39,6 +39,20 @@ else
   echo "  Then re-run this installer."
 fi
 
+# Register Promptdeed as a separate app in the ChromeOS launcher
+# Clicking it opens a NEW terminal window running the robot — your main Penguin terminal stays untouched.
+mkdir -p "$HOME/.local/share/applications"
+cat > "$HOME/.local/share/applications/promptdeed.desktop" <<DESKTOP
+[Desktop Entry]
+Name=Promptdeed
+Comment=Private terminal AI agent
+Exec=$HOME_DIR/bin/promptdeed
+Terminal=true
+Type=Application
+Categories=Utility;Development;
+DESKTOP
+update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+
 if command -v ollama >/dev/null 2>&1; then
   echo ""
   echo "Pulling llama3.1 model (one-time, ~4.7GB)..."
@@ -47,8 +61,14 @@ fi
 
 echo ""
 echo "================================================"
-echo "  Installed. Launching agent now."
-echo "  Run again anytime with:  promptdeed"
+echo "  Installed."
+echo ""
+echo "  Two ways to open the robot's terminal:"
+echo "   1. Click 'Promptdeed' in the ChromeOS app launcher"
+echo "      (opens its own separate terminal window)"
+echo "   2. Type 'promptdeed' in any Linux terminal"
+echo ""
+echo "  Launching agent now in this window..."
 echo "================================================"
 echo ""
 exec "$HOME_DIR/bin/promptdeed" < /dev/tty
