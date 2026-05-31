@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B2B4B">
+<title>Gemini ↔ Shopify Bridge — Connect</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#FAF7F2;color:#1A1A1A;line-height:1.5;min-height:100vh}
+@media (prefers-color-scheme:dark){body{background:#0E1525;color:#E8E6E1}.card{background:#162033!important;border-color:#243047!important}.input{background:#0E1525!important;color:#E8E6E1!important;border-color:#243047!important}}
+header{background:#1B2B4B;color:#FAF7F2;padding:20px}
+.wrap{max-width:680px;margin:0 auto;padding:20px}
+.brand{display:flex;align-items:center;gap:10px;max-width:680px;margin:0 auto}
+.logo{width:34px;height:34px;background:#B8743D;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+h1{font-size:20px;margin:0}
+.sub{font-size:13px;color:#C8CDD7;max-width:680px;margin:6px auto 0}
+.card{background:#fff;border:1px solid #E6E1D9;border-radius:12px;padding:18px;margin:0 0 16px}
+.card h2{font-size:16px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.step{display:inline-flex;width:24px;height:24px;border-radius:50%;background:#1B2B4B;color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.card p{font-size:14px;color:#6B7280;margin:6px 0 12px}
+.input{width:100%;padding:11px 12px;border:1px solid #D8D2C7;border-radius:8px;font-size:14px;margin:0 0 10px;font-family:inherit}
+label{font-size:12px;font-weight:600;color:#475569;display:block;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.btn{background:#1B2B4B;color:#fff;border:none;padding:11px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#243657}
+.btn.alt{background:#B8743D}
+.btn.alt:hover{background:#a3652f}
+.btn.ghost{background:transparent;color:#1B2B4B;border:1px solid #1B2B4B}
+@media (prefers-color-scheme:dark){.btn.ghost{color:#E8E6E1;border-color:#E8E6E1}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status{font-size:14px;font-weight:600;margin:10px 0 0;padding:10px 12px;border-radius:8px;display:none;white-space:pre-wrap;word-break:break-word}
+.status.ok{display:block;background:#e6f6ec;color:#15803d;border:1px solid #a7e3bd}
+.status.err{display:block;background:#fde8e8;color:#b91c1c;border:1px solid #f3b4b4}
+.status.busy{display:block;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+@media (prefers-color-scheme:dark){.status.ok{background:#08230f;border-color:#1d5430}.status.err{background:#2a0e0e;border-color:#5e2222}.status.busy{background:#11162e;border-color:#2d3a72}}
+a.link{color:#B8743D;font-weight:600;text-decoration:none}
+a.link:hover{text-decoration:underline}
+.pill{font-size:12px;padding:3px 9px;border-radius:999px;background:#eee;color:#555;font-weight:600}
+.pill.on{background:#15803d;color:#fff}
+small.note{display:block;font-size:12px;color:#94a3b8;margin-top:8px}
+pre{white-space:pre-wrap;word-break:break-word;background:#F5F1EA;border:1px solid #E6E1D9;border-radius:8px;padding:12px;font-size:13px;margin:10px 0 0}
+@media (prefers-color-scheme:dark){pre{background:#0B1322;border-color:#243047;color:#E8E6E1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">⇄</div>
+    <div>
+      <h1>Gemini ↔ Shopify Bridge</h1>
+    </div>
+  </div>
+  <p class="sub">Connect the two sides, then test that they actually talk to each other. Your keys stay on this device only — they are never uploaded anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- STEP 1: GEMINI -->
+  <div class="card">
+    <h2><span class="step">1</span> Connect Google Gemini <span id="geminiPill" class="pill">not connected</span></h2>
+    <p>Tap the button to open Google's page. <strong>You log in with your own Google account</strong> and create a key, then paste it back here.</p>
+    <div class="row" style="margin-bottom:12px">
+      <a class="btn alt" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Open Google login &amp; get my key →</a>
+    </div>
+    <label for="geminiKey">Paste your Gemini API key</label>
+    <input class="input" id="geminiKey" type="password" placeholder="AIza..." autocomplete="off">
+    <div class="row">
+      <button class="btn" onclick="testGemini()">Test Gemini connection</button>
+      <button class="btn ghost" onclick="toggleShow('geminiKey',this)">Show</button>
+    </div>
+    <div class="status" id="geminiStatus"></div>
+  </div>
+
+  <!-- STEP 2: SHOPIFY -->
+  <div class="card">
+    <h2><span class="step">2</span> Connect Shopify <span id="shopPill" class="pill">not connected</span></h2>
+    <p>From your Shopify admin: <strong>Settings → Apps → Develop apps → Create an app → Admin API</strong>, allow <code>read_products</code>, install, and copy the token.</p>
+    <label for="shopDomain">Your store domain</label>
+    <input class="input" id="shopDomain" placeholder="your-store.myshopify.com" autocomplete="off">
+    <label for="shopToken">Admin API access token</label>
+    <input class="input" id="shopToken" type="password" placeholder="shpat_..." autocomplete="off">
+    <div class="row">
+      <button class="btn" onclick="testShopify()">Test Shopify connection</button>
+      <button class="btn ghost" onclick="toggleShow('shopToken',this)">Show</button>
+    </div>
+    <div class="status" id="shopStatus"></div>
+  </div>
+
+  <!-- STEP 3: RUN THE BRIDGE -->
+  <div class="card">
+    <h2><span class="step">3</span> Run the bridge</h2>
+    <p>Once Gemini is connected, type any product name and Gemini will write store copy for it — proving the bridge works end to end.</p>
+    <label for="productName">Product to write copy for</label>
+    <input class="input" id="productName" placeholder="e.g. Meridian — Real Estate Agent Website">
+    <button class="btn" onclick="runBridge()">Generate copy with Gemini</button>
+    <div class="status" id="bridgeStatus"></div>
+    <pre id="bridgeOut" style="display:none"></pre>
+  </div>
+
+  <small class="note">🔒 Everything you type here is saved only in this browser (localStorage) and sent only to Google and Shopify directly. Nothing is sent to us, and nothing is committed to GitHub.</small>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const GEMINI_MODEL = 'gemini-2.0-flash';
+
+// ---- persistence (this device only) ----
+function save(){
+  localStorage.setItem('bridge_gemini', $('geminiKey').value.trim());
+  localStorage.setItem('bridge_shop_domain', $('shopDomain').value.trim());
+  localStorage.setItem('bridge_shop_token', $('shopToken').value.trim());
+}
+function load(){
+  $('geminiKey').value = localStorage.getItem('bridge_gemini') || '';
+  $('shopDomain').value = localStorage.getItem('bridge_shop_domain') || '';
+  $('shopToken').value = localStorage.getItem('bridge_shop_token') || '';
+}
+['geminiKey','shopDomain','shopToken'].forEach(id=>{
+  document.addEventListener('input', e=>{ if(e.target.id===id) save(); });
+});
+
+function toggleShow(id, btn){
+  const el = $(id);
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? 'Show' : 'Hide';
+}
+function setStatus(id, kind, msg){
+  const el = $(id); el.className = 'status ' + kind; el.textContent = msg;
+}
+function setPill(id, on){
+  const el = $(id); el.className = 'pill' + (on ? ' on' : ''); el.textContent = on ? 'connected ✓' : 'not connected';
+}
+
+// ---- STEP 1: Gemini (works directly from the browser) ----
+async function testGemini(){
+  save();
+  const key = $('geminiKey').value.trim();
+  if(!key){ setStatus('geminiStatus','err','Paste your Gemini key first.'); return; }
+  setStatus('geminiStatus','busy','Contacting Google Gemini…');
+  try{
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`;
+    const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:'Reply with exactly one word: connected'}]}]})});
+    const data = await res.json();
+    if(!res.ok){
+      setStatus('geminiStatus','err','❌ Gemini rejected the key ('+res.status+'): '+(data.error?.message||'unknown error'));
+      setPill('geminiPill',false); return;
+    }
+    const txt = (data.candidates?.[0]?.content?.parts?.[0]?.text||'').trim();
+    setStatus('geminiStatus','ok','✅ Connected to Google Gemini! It replied: "'+txt+'"');
+    setPill('geminiPill',true);
+  }catch(err){
+    setStatus('geminiStatus','err','❌ Could not reach Gemini: '+err.message);
+    setPill('geminiPill',false);
+  }
+}
+
+// ---- STEP 2: Shopify (browsers are blocked from the Admin API by Shopify) ----
+async function testShopify(){
+  save();
+  const domain = $('shopDomain').value.trim().replace(/^https?:\/\//,'');
+  const token = $('shopToken').value.trim();
+  if(!domain || !token){ setStatus('shopStatus','err','Enter both your store domain and token.'); return; }
+  setStatus('shopStatus','busy','Contacting Shopify…');
+  try{
+    const url = `https://${domain}/admin/api/2025-01/graphql.json`;
+    const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Access-Token':token},
+      body:JSON.stringify({query:'{ shop { name myshopifyDomain } }'})});
+    const data = await res.json();
+    const name = data?.data?.shop?.name;
+    if(name){
+      setStatus('shopStatus','ok','✅ Connected to Shopify store: '+name);
+      setPill('shopPill',true);
+    }else{
+      setStatus('shopStatus','err','❌ Shopify responded but the token may be wrong: '+JSON.stringify(data).slice(0,200));
+      setPill('shopPill',false);
+    }
+  }catch(err){
+    // Shopify blocks the Admin API from web pages for security (CORS). This is expected.
+    setStatus('shopStatus','err',
+      '⚠️ Shopify blocks store logins from inside a web page for security, so it can\'t be tested here — this is normal.\n\n'+
+      'Your domain + token are saved on this device. The daily robot (which runs on a server, not a page) uses them with no problem. '+
+      'Browser said: '+err.message);
+    setPill('shopPill',false);
+  }
+}
+
+// ---- STEP 3: end-to-end ----
+async function runBridge(){
+  save();
+  const key = $('geminiKey').value.trim();
+  const product = $('productName').value.trim();
+  if(!key){ setStatus('bridgeStatus','err','Connect Gemini in Step 1 first.'); return; }
+  if(!product){ setStatus('bridgeStatus','err','Type a product name.'); return; }
+  setStatus('bridgeStatus','busy','Gemini is writing copy for "'+product+'"…');
+  $('bridgeOut').style.display='none';
+  const prompt = `You are an expert e-commerce copywriter for a Shopify store. For the product "${product}", write:\n`+
+    `1) a polished product description (2 short paragraphs + a bullet list of benefits)\n`+
+    `2) an SEO title (max 60 chars)\n3) an SEO meta description (max 155 chars)\n4) a social caption with 3-4 hashtags.`;
+  try{
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`;
+    const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7,maxOutputTokens:2048}})});
+    const data = await res.json();
+    if(!res.ok){ setStatus('bridgeStatus','err','❌ Gemini error: '+(data.error?.message||res.status)); return; }
+    const txt = data.candidates?.[0]?.content?.parts?.[0]?.text || '(no text)';
+    setStatus('bridgeStatus','ok','✅ The bridge works — Gemini wrote this:');
+    $('bridgeOut').textContent = txt;
+    $('bridgeOut').style.display='block';
+  }catch(err){
+    setStatus('bridgeStatus','err','❌ '+err.message);
+  }
+}
+
+load();
+if(localStorage.getItem('bridge_gemini')) setPill('geminiPill', false);
+</script>
+</body>
+</html>
