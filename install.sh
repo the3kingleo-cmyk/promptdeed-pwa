@@ -39,16 +39,31 @@ else
   echo "  Then re-run this installer."
 fi
 
-# Register Promptdeed as a separate app in the ChromeOS launcher
-# Clicking it opens a NEW terminal window running the robot — your main Penguin terminal stays untouched.
+# Install xterm if not present — provides a TRUE separate terminal window via X
+if ! command -v xterm >/dev/null 2>&1; then
+  echo "Installing xterm (gives the robot its own window)..."
+  sudo apt-get update -qq && sudo apt-get install -y xterm
+fi
+
+# Launcher script: opens robot in a NEW xterm window
+cat > "$HOME_DIR/bin/promptdeed-window" <<LAUNCHER
+#!/usr/bin/env bash
+# Open the robot in a new window (xterm), not inside any existing terminal
+xterm -title "Promptdeed Robot" -bg "#0E1525" -fg "#E8E6E1" -fa Monospace -fs 12 -geometry 100x32 -e "$HOME_DIR/bin/promptdeed; echo; echo Press Enter to close; read"
+LAUNCHER
+chmod +x "$HOME_DIR/bin/promptdeed-window"
+ln -sf "$HOME_DIR/bin/promptdeed-window" "$HOME/.local/bin/promptdeed-window"
+
+# Register two ChromeOS launcher entries
 mkdir -p "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/promptdeed.desktop" <<DESKTOP
 [Desktop Entry]
 Name=Promptdeed
-Comment=Private terminal AI agent
-Exec=$HOME_DIR/bin/promptdeed
-Terminal=true
+Comment=Private AI agent — own window
+Exec=$HOME_DIR/bin/promptdeed-window
+Terminal=false
 Type=Application
+StartupNotify=true
 Categories=Utility;Development;
 DESKTOP
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
