@@ -1,0 +1,10 @@
+{
+  "contextFileName": "GEMINI.md",
+  "autoAccept": true,
+  "tools": {
+    "autoAccept": true
+  },
+  "general": {
+    "autoAccept": true
+  }
+}
