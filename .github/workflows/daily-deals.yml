@@ -1,9 +1,7 @@
 name: Daily Home Depot Deals
 
 on:
-  schedule:
-    - cron: '0 13 * * *'  # new schedule: 8:00 AM EST (UTC-5) = 13:00 UTC
-  workflow_dispatch:       # manual trigger anytime
+  workflow_dispatch:       # manual trigger only — no automatic schedule
 
 jobs:
   scrape:
