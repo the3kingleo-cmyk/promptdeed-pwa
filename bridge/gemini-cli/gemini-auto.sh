@@ -32,5 +32,9 @@ echo "  Reading agentic brief: GEMINI.md"
 echo "============================================================"
 echo
 
-# --yolo = auto-approve all actions. -y is the short form on newer versions.
-exec gemini --yolo "$@"
+# Trust this folder so YOLO is not downgraded back to "ask for approval".
+export GEMINI_CLI_TRUST_WORKSPACE=true
+
+# --yolo       = auto-approve every action (no permission prompts)
+# --skip-trust = don't gate YOLO behind the trusted-folder prompt
+exec gemini --yolo --skip-trust "$@"
