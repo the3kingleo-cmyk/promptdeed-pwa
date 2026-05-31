@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B2B4B">
+<title>Gemini Control — it runs the page</title>
+<style>
+:root{--accent:#B8743D}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#FAF7F2;color:#1A1A1A;line-height:1.5;min-height:100vh}
+@media (prefers-color-scheme:dark){body{background:#0E1525;color:#E8E6E1}.canvas,.bar,.card{background:#162033!important;border-color:#243047!important}.input{background:#0E1525!important;color:#E8E6E1!important;border-color:#243047!important}}
+header{background:#1B2B4B;color:#FAF7F2;padding:16px 20px}
+.brand{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto}
+.logo{width:34px;height:34px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+h1{font-size:18px;margin:0}
+.sub{font-size:12px;color:#C8CDD7;max-width:760px;margin:6px auto 0}
+.wrap{max-width:760px;margin:0 auto;padding:18px}
+
+/* sign-in gate */
+.gate{background:#fff;border:1px solid #E6E1D9;border-radius:12px;padding:18px;margin-bottom:16px}
+.gate.hidden{display:none}
+.gate h2{font-size:16px;margin:0 0 6px}
+.gate p{font-size:13px;color:#6B7280;margin:0 0 12px}
+label{font-size:12px;font-weight:600;color:#475569;display:block;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.input{width:100%;padding:11px 12px;border:1px solid #D8D2C7;border-radius:8px;font-size:14px;font-family:inherit}
+
+/* the page Gemini controls */
+.canvas{background:#fff;border:2px dashed #D8D2C7;border-radius:12px;padding:18px;min-height:220px}
+.canvas h2#headline{margin:0 0 4px;font-size:24px;color:var(--accent)}
+.canvas .empty{color:#94a3b8;font-size:14px;text-align:center;padding:40px 10px}
+.card{background:#FAF7F2;border:1px solid #E6E1D9;border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px;margin:12px 0}
+.card h3{margin:0 0 4px;font-size:16px}
+.card .price{color:var(--accent);font-weight:700}
+.card p{margin:6px 0 0;font-size:14px;color:#475569}
+.card img{max-width:100%;border-radius:8px;margin-top:10px;display:block}
+.note{font-size:13px;color:#6B7280;font-style:italic;margin:10px 0 0}
+
+/* command bar */
+.bar{position:sticky;bottom:0;background:#fff;border:1px solid #E6E1D9;border-radius:12px;padding:12px;margin-top:16px;box-shadow:0 -2px 10px rgba(0,0,0,.04)}
+.bar .pill{font-size:11px;color:#15803d;font-weight:700;display:none}
+.bar .pill.on{display:inline}
+.row{display:flex;gap:8px;align-items:center}
+.btn{background:#1B2B4B;color:#fff;border:none;padding:11px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0}
+.btn:hover{background:#243657}
+.btn.alt{background:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.log{font-size:12px;color:#94a3b8;margin-top:8px;white-space:pre-wrap;max-height:120px;overflow:auto}
+.ex{font-size:12px;color:#6B7280;margin:8px 0 0}
+.ex b{color:var(--accent);cursor:pointer}
+small.priv{display:block;font-size:11px;color:#94a3b8;margin-top:14px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">◎</div>
+    <div><h1>Gemini Control</h1></div>
+  </div>
+  <p class="sub">You sign in with Google Gemini. From then on, Gemini runs this page — it builds, uploads, edits, and manages everything below from your plain-English commands.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- SIGN IN -->
+  <div class="gate" id="gate">
+    <h2>Sign in to hand the page to Gemini</h2>
+    <p>Get your key from Google (you log in there), paste it, and Gemini takes the controls.</p>
+    <div style="margin-bottom:10px">
+      <a class="btn alt" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Open Google login &amp; get my key →</a>
+    </div>
+    <label for="key">Gemini API key</label>
+    <input class="input" id="key" type="password" placeholder="AIza..." autocomplete="off" style="margin-bottom:10px">
+    <button class="btn" onclick="signIn()">Give Gemini control</button>
+    <div class="log" id="gateLog"></div>
+  </div>
+
+  <!-- THE PAGE GEMINI CONTROLS -->
+  <div class="canvas" id="canvas">
+    <h2 id="headline"></h2>
+    <div id="content"><div class="empty">This area is Gemini's. Sign in, then tell Gemini what to put here.</div></div>
+    <div class="note" id="note"></div>
+  </div>
+
+  <!-- COMMAND BAR -->
+  <div class="bar">
+    <div class="row">
+      <input class="input" id="cmd" placeholder="Tell Gemini what to do…" disabled
+             onkeydown="if(event.key==='Enter')send()">
+      <input type="file" id="file" accept="image/*" style="display:none" onchange="onUpload()">
+      <button class="btn alt" id="upBtn" onclick="document.getElementById('file').click()" disabled title="Upload an image for Gemini to place">⬆</button>
+      <button class="btn" id="sendBtn" onclick="send()" disabled>Send</button>
+    </div>
+    <div class="ex">Try: <b onclick="quick(this)">Set the headline to ProKit Digital Spring Sale</b> · <b onclick="quick(this)">Add a product: Meridian Real Estate Website, $297, done-for-you agent site</b> · <b onclick="quick(this)">Change the accent color to navy blue</b></div>
+    <div class="log" id="log"></div>
+  </div>
+
+  <small class="priv">🔒 Your key lives only in this browser and talks only to Google. Nothing is uploaded to us.</small>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const MODEL = 'gemini-2.0-flash';
+let KEY = '';
+let history = [];
+let lastUpload = null; // {dataUrl, name}
+
+// ---- Tools Gemini can call to control the page ----
+const TOOLS = [{
+  functionDeclarations: [
+    { name:'set_headline', description:'Set the big headline at the top of the page.',
+      parameters:{type:'object',properties:{text:{type:'string'}},required:['text']} },
+    { name:'set_accent_color', description:'Set the page accent color. Accepts a hex code like #1B2B4B or a common color name.',
+      parameters:{type:'object',properties:{color:{type:'string'}},required:['color']} },
+    { name:'add_card', description:'Add a content/text card to the page.',
+      parameters:{type:'object',properties:{title:{type:'string'},body:{type:'string'}},required:['title','body']} },
+    { name:'add_product', description:'Add a product card with a name, price and description.',
+      parameters:{type:'object',properties:{name:{type:'string'},price:{type:'string'},description:{type:'string'}},required:['name','description']} },
+    { name:'place_uploaded_image', description:'Place the most recently uploaded image on the page with an optional caption. Only works after the user uploads an image.',
+      parameters:{type:'object',properties:{caption:{type:'string'}}} },
+    { name:'set_note', description:'Set a small note/status line under the content.',
+      parameters:{type:'object',properties:{text:{type:'string'}},required:['text']} },
+    { name:'clear_page', description:'Remove all cards, headline and note — reset the page.',
+      parameters:{type:'object',properties:{}} },
+  ]
+}];
+
+const COLORS = {navy:'#1B2B4B','navy blue':'#1B2B4B',blue:'#2563eb',red:'#dc2626',green:'#15803d',orange:'#B8743D',gold:'#B8743D',black:'#111',purple:'#7c3aed',teal:'#0d9488',pink:'#db2777'};
+
+function clearEmpty(){ const e=$('content').querySelector('.empty'); if(e) e.remove(); }
+
+// ---- the actual page-control actions ----
+function runTool(name, args){
+  args = args || {};
+  switch(name){
+    case 'set_headline': $('headline').textContent = args.text||''; return 'headline set';
+    case 'set_accent_color': {
+      let c = (args.color||'').trim().toLowerCase();
+      c = COLORS[c] || (args.color||'').trim();
+      document.documentElement.style.setProperty('--accent', c); return 'accent color set to '+c;
+    }
+    case 'add_card': {
+      clearEmpty();
+      const d=document.createElement('div'); d.className='card';
+      d.innerHTML='<h3></h3><p></p>'; d.querySelector('h3').textContent=args.title||'';
+      d.querySelector('p').textContent=args.body||''; $('content').appendChild(d); return 'card added';
+    }
+    case 'add_product': {
+      clearEmpty();
+      const d=document.createElement('div'); d.className='card';
+      d.innerHTML='<h3></h3><div class="price"></div><p></p>';
+      d.querySelector('h3').textContent=args.name||'';
+      d.querySelector('.price').textContent=args.price?('From '+args.price):'';
+      d.querySelector('p').textContent=args.description||''; $('content').appendChild(d); return 'product added';
+    }
+    case 'place_uploaded_image': {
+      if(!lastUpload) return 'no image has been uploaded yet';
+      clearEmpty();
+      const d=document.createElement('div'); d.className='card';
+      d.innerHTML='<h3></h3><img>'; d.querySelector('h3').textContent=args.caption||lastUpload.name;
+      d.querySelector('img').src=lastUpload.dataUrl; $('content').appendChild(d); return 'image placed';
+    }
+    case 'set_note': $('note').textContent=args.text||''; return 'note set';
+    case 'clear_page':
+      $('headline').textContent=''; $('note').textContent='';
+      $('content').innerHTML='<div class="empty">Cleared. Tell Gemini what to build next.</div>'; return 'page cleared';
+    default: return 'unknown tool';
+  }
+}
+
+function logMsg(t){ $('log').textContent = t; }
+
+// ---- sign in ----
+async function signIn(){
+  KEY = $('key').value.trim();
+  if(!KEY){ $('gateLog').textContent='Paste your Gemini key first.'; return; }
+  $('gateLog').textContent='Checking key with Google…';
+  try{
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(KEY)}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'ok'}]}]})});
+    if(!r.ok){ const e=await r.json(); $('gateLog').textContent='❌ '+(e.error?.message||r.status); return; }
+    localStorage.setItem('bridge_gemini', KEY);
+    $('gate').classList.add('hidden');
+    ['cmd','sendBtn','upBtn'].forEach(id=>$(id).disabled=false);
+    $('cmd').focus();
+    runTool('set_note',{text:'Gemini is now in control of this page. Give it a command below.'});
+  }catch(err){ $('gateLog').textContent='❌ Could not reach Google: '+err.message; }
+}
+
+// ---- upload ----
+function onUpload(){
+  const f=$('file').files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{ lastUpload={dataUrl:rd.result,name:f.name}; logMsg('Uploaded "'+f.name+'". Now tell Gemini: "place the uploaded image".'); };
+  rd.readAsDataURL(f);
+}
+
+function quick(el){ $('cmd').value = el.textContent; $('cmd').focus(); }
+
+// ---- talk to Gemini (with function calling) ----
+async function send(){
+  const text=$('cmd').value.trim(); if(!text) return;
+  $('cmd').value=''; $('sendBtn').disabled=true; logMsg('Gemini is working…');
+  history.push({role:'user',parts:[{text}]});
+  try{
+    let final='';
+    for(let round=0; round<6; round++){
+      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(KEY)}`,
+        {method:'POST',headers:{'Content-Type':'application/json'},
+         body:JSON.stringify({contents:history, tools:TOOLS})});
+      const data=await r.json();
+      if(!r.ok){ logMsg('❌ '+(data.error?.message||r.status)); break; }
+      const parts=data.candidates?.[0]?.content?.parts||[];
+      history.push({role:'model',parts});
+      const calls=parts.filter(p=>p.functionCall).map(p=>p.functionCall);
+      const said=parts.map(p=>p.text).filter(Boolean).join(' ');
+      if(said) final=said;
+      if(calls.length===0){ break; }
+      // Gemini chose to control the page — run each action and report back to it
+      const responses=calls.map(c=>{
+        const result=runTool(c.name, c.args);
+        return {functionResponse:{name:c.name, response:{result}}};
+      });
+      history.push({role:'user',parts:responses});
+    }
+    logMsg(final ? ('Gemini: '+final) : 'Done.');
+  }catch(err){ logMsg('❌ '+err.message); }
+  $('sendBtn').disabled=false; $('cmd').focus();
+}
+
+// resume if key already saved
+(function(){
+  const saved=localStorage.getItem('bridge_gemini');
+  if(saved){ $('key').value=saved; }
+})();
+</script>
+</body>
+</html>
