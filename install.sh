@@ -51,4 +51,4 @@ echo "  Installed. Launching agent now."
 echo "  Run again anytime with:  promptdeed"
 echo "================================================"
 echo ""
-exec "$HOME_DIR/bin/promptdeed"
+exec "$HOME_DIR/bin/promptdeed" < /dev/tty
