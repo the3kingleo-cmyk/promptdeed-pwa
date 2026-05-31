@@ -4,6 +4,25 @@ Build a complete, modern **Shopify Online Store 2.0** theme from scratch in a ne
 folder named `theme/` in the current directory. Work autonomously — do not ask for
 permission. Create every file, then verify the structure is complete before reporting.
 
+## Store context — build the theme to fit THIS store
+
+This theme is for **ProKit Digital** (prokitdigital.shop), a digital-products and
+done-for-you services brand. It sells two kinds of things, and the theme must showcase both:
+
+1. **Instant digital downloads** — ebooks, prompt packs, and guides (AI, finance, fitness,
+   productivity, marketing), roughly $14–$47. These need a fast "buy → instant download" feel,
+   strong covers, benefit bullets, and trust signals.
+2. **Done-for-you build services** — custom websites, web apps, AI solutions, templates, and
+   real-estate sites, roughly $47–$1,197. These are higher-ticket and need a premium,
+   credible "agency" presentation: what's included, how it works, delivery timeframe, packages.
+
+**Brand feel:** modern, techy, trustworthy, conversion-focused — a clean digital/SaaS
+aesthetic. Dark-navy + a single confident accent, crisp typography, lots of whitespace,
+clear calls to action. It should look like a professional digital studio, not a generic shop.
+Include homepage sections that suit both a digital-download catalog and a services pitch
+(e.g. hero, featured downloads, "done-for-you services" showcase, how-it-works steps,
+testimonials, newsletter).
+
 ## Quality bar (non-negotiable)
 
 - **Online Store 2.0 architecture**: JSON templates + sections everywhere, so every
