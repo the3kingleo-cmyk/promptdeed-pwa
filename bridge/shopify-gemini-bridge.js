@@ -61,11 +61,17 @@ function checkConfig() {
   if (!CONFIG.geminiKey) missing.push('GEMINI_API_KEY');
 
   if (missing.length) {
-    fail(
-      `Missing required credentials: ${missing.join(', ')}\n\n` +
-      `Set them as environment variables locally, or as GitHub Secrets for the\n` +
-      `daily workflow. See bridge/README.md for step-by-step instructions.`
+    // The robot is installed but not yet given its administrative access.
+    // Exit cleanly (success) so the daily workflow stays GREEN and quiet —
+    // it simply skips until the keys are pasted in. No error emails.
+    log(
+      `\n⏸️  Robot is installed but idle — waiting for its administrative access.\n` +
+      `   Missing: ${missing.join(', ')}\n\n` +
+      `   Add these as GitHub Secrets (one time) to switch it on. Exact steps:\n` +
+      `   bridge/README.md → "Give the robot its administrative access".\n` +
+      `   Skipping this run.`
     );
+    process.exit(0);
   }
 
   // Normalize: allow either "store" or "store.myshopify.com"
