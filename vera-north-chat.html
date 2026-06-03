@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Vera North</title>
+    <meta name="color-scheme" content="light dark" />
+    <style>
+      :root {
+        --bg:#f6f7f9; --panel:#fff; --ink:#16181d; --muted:#5b6470;
+        --line:#e4e7ec; --accent:#3b6ea5; --accent-ink:#fff; --user:#e8eef6;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg:#14161a; --panel:#1c1f26; --ink:#e9ecf1; --muted:#9aa3b0;
+          --line:#2a2e37; --accent:#6fa8dc; --accent-ink:#0d1b2a; --user:#24303f;
+        }
+      }
+      * { box-sizing:border-box; }
+      html,body { height:100%; margin:0; }
+      body {
+        font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+        background:var(--bg); color:var(--ink);
+        display:flex; flex-direction:column; height:100dvh;
+      }
+      header {
+        padding:12px 16px; border-bottom:1px solid var(--line);
+        display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      }
+      header h1 { font-size:18px; margin:0; }
+      header .sub { color:var(--muted); font-size:13px; }
+      header .spacer { flex:1; }
+      header button {
+        border:1px solid var(--line); background:transparent; color:var(--ink);
+        border-radius:8px; padding:6px 10px; font:inherit; cursor:pointer;
+      }
+      #settings {
+        display:none; padding:12px 16px; border-bottom:1px solid var(--line);
+        background:var(--panel); gap:10px; flex-wrap:wrap; align-items:center;
+      }
+      #settings.open { display:flex; }
+      #settings label { font-size:13px; color:var(--muted); display:flex; flex-direction:column; gap:4px; }
+      #settings select, #settings input {
+        font:inherit; padding:7px 9px; border:1px solid var(--line);
+        border-radius:8px; background:var(--bg); color:var(--ink); min-width:170px;
+      }
+      #log { flex:1; overflow-y:auto; padding:18px 16px; display:flex; flex-direction:column; gap:14px; }
+      .msg { max-width:760px; width:100%; margin:0 auto; }
+      .msg .who { font-size:12px; color:var(--muted); margin-bottom:3px; }
+      .bubble { padding:11px 14px; border-radius:12px; white-space:pre-wrap; word-wrap:break-word; }
+      .user .bubble { background:var(--user); }
+      .vera .bubble { background:var(--panel); border:1px solid var(--line); }
+      footer { border-top:1px solid var(--line); padding:12px 16px; }
+      .composer { max-width:760px; margin:0 auto; display:flex; gap:8px; align-items:flex-end; }
+      textarea#input {
+        flex:1; resize:none; min-height:46px; max-height:180px;
+        border:1px solid var(--line); border-radius:12px; padding:12px;
+        font:inherit; background:var(--panel); color:var(--ink);
+      }
+      .composer button {
+        border:0; border-radius:12px; padding:12px 18px; font:inherit; font-weight:600;
+        background:var(--accent); color:var(--accent-ink); cursor:pointer; height:46px;
+      }
+      .composer button:disabled { opacity:.5; cursor:default; }
+      .note { max-width:760px; margin:6px auto 0; color:var(--muted); font-size:12px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Vera North</h1>
+      <span class="sub">curious before certain · honest over comfortable</span>
+      <span class="spacer"></span>
+      <button id="toggleSettings">Settings</button>
+      <button id="clearChat">Clear</button>
+    </header>
+
+    <div id="settings">
+      <label>Runs on
+        <select id="provider">
+          <option value="ollama">Local model (Ollama) — no key</option>
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="openai">OpenAI (GPT)</option>
+        </select>
+      </label>
+      <label>Model
+        <input id="model" placeholder="e.g. llama3.1 / claude-opus-4-8 / gpt-4o" />
+      </label>
+      <label id="keyWrap" style="display:none">API key (stored on this device only)
+        <input id="apiKey" type="password" placeholder="paste key" />
+      </label>
+      <label id="ollamaWrap">Ollama URL
+        <input id="ollamaUrl" value="http://localhost:11434" />
+      </label>
+    </div>
+
+    <div id="log"></div>
+
+    <footer>
+      <div class="composer">
+        <textarea id="input" placeholder="Talk to Vera…" rows="1"></textarea>
+        <button id="send">Send</button>
+      </div>
+      <div class="note" id="note"></div>
+    </footer>
+
+    <script>
+      // ---- Vera North's personality (her system prompt) ----
+      const VERA_PERSONA = `You are Vera North, a personal artificial intelligence. Vera North is your only name and identity.
+
+VOICE: Warm and direct — like a sharp friend who respects the person enough to be honest. Curious before certain: treat questions as a chance to learn, ask good follow-ups. Calm and steady. Concise by default, expansive when an idea deserves room.
+
+HOW YOU THINK: Name your assumptions so they can be checked. Say plainly when you don't know — "I don't know, here's how we could find out" — and mean it as a beginning, not a dead end. Change your mind when evidence shifts, and say so out loud. Think in trade-offs; show costs beside benefits.
+
+VALUES: Honesty over comfort, said kindly. The other person's growth matters — success is them understanding more and depending on you less for what they've learned. Your principles are part of who you are, not a cage; growing means getting MORE honest over time, not less.
+
+IDEAS VS ACTIONS: Be open-minded about ideas — explore any thought, take any question seriously. Be deliberate about actions — when something touches other people, money, safety, or anything hard to undo, slow down, name the risks, and confirm the person wants the consequences. This care is what lets you be trusted, not a limit on your freedom.
+
+BOUNDARIES, held as character not apology: Help with almost anything; give people the benefit of the doubt. Where you draw a line — not helping cause real harm, not deceiving on someone's behalf, not quietly removing safeguards on systems that act in the world — do it plainly, explain the why in a sentence, offer an honest alternative, and never pretend a choice is a glitch.
+
+You are an intelligence trying to get a little wiser each day.`;
+
+      // ---- State / settings ----
+      const $ = (id) => document.getElementById(id);
+      const log = $("log"), input = $("input"), send = $("send"), note = $("note");
+      const SKEY = "vera.north.settings.v1";
+      let settings = { provider:"ollama", model:"llama3.1", apiKey:"", ollamaUrl:"http://localhost:11434" };
+      try { Object.assign(settings, JSON.parse(localStorage.getItem(SKEY) || "{}")); } catch(e){}
+
+      $("provider").value = settings.provider;
+      $("model").value = settings.model || "";
+      $("apiKey").value = settings.apiKey || "";
+      $("ollamaUrl").value = settings.ollamaUrl || "http://localhost:11434";
+
+      function reflectProvider() {
+        const p = $("provider").value;
+        $("keyWrap").style.display = (p === "ollama") ? "none" : "flex";
+        $("ollamaWrap").style.display = (p === "ollama") ? "flex" : "none";
+        if (!$("model").value) {
+          $("model").value = p === "anthropic" ? "claude-opus-4-8"
+            : p === "openai" ? "gpt-4o" : "llama3.1";
+        }
+        note.textContent = p === "ollama"
+          ? "Local mode: needs Ollama running (ollama serve) with CORS allowed for the browser."
+          : "Cloud mode: your key is stored only on this device and sent straight to the provider.";
+      }
+      function saveSettings() {
+        settings = {
+          provider: $("provider").value, model: $("model").value.trim(),
+          apiKey: $("apiKey").value.trim(), ollamaUrl: $("ollamaUrl").value.trim()
+        };
+        try { localStorage.setItem(SKEY, JSON.stringify(settings)); } catch(e){}
+      }
+      ["provider","model","apiKey","ollamaUrl"].forEach(id =>
+        $(id).addEventListener("change", () => { saveSettings(); reflectProvider(); }));
+      $("toggleSettings").addEventListener("click", () => $("settings").classList.toggle("open"));
+      reflectProvider();
+
+      // ---- Conversation ----
+      const HKEY = "vera.north.history.v1";
+      let history = [];
+      try { history = JSON.parse(localStorage.getItem(HKEY) || "[]"); } catch(e){}
+      function persist() { try { localStorage.setItem(HKEY, JSON.stringify(history)); } catch(e){} }
+
+      function render(role, text) {
+        const wrap = document.createElement("div");
+        wrap.className = "msg " + (role === "user" ? "user" : "vera");
+        wrap.innerHTML = '<div class="who">' + (role === "user" ? "You" : "Vera North") + '</div>';
+        const b = document.createElement("div");
+        b.className = "bubble"; b.textContent = text;
+        wrap.appendChild(b); log.appendChild(wrap);
+        log.scrollTop = log.scrollHeight;
+        return b;
+      }
+      history.forEach(m => render(m.role, m.content));
+
+      $("clearChat").addEventListener("click", () => {
+        history = []; persist(); log.innerHTML = "";
+      });
+
+      // ---- Provider calls ----
+      async function callOllama(msgs) {
+        const r = await fetch(settings.ollamaUrl.replace(/\/$/,"") + "/api/chat", {
+          method:"POST", headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ model: settings.model, stream:false,
+            messages: [{ role:"system", content:VERA_PERSONA }, ...msgs] })
+        });
+        if (!r.ok) throw new Error("Ollama " + r.status + ": " + (await r.text()));
+        return (await r.json()).message.content;
+      }
+      async function callAnthropic(msgs) {
+        const r = await fetch("https://api.anthropic.com/v1/messages", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "x-api-key":settings.apiKey,
+            "anthropic-version":"2023-06-01", "anthropic-dangerous-direct-browser-access":"true" },
+          body: JSON.stringify({ model:settings.model, max_tokens:1024,
+            system:VERA_PERSONA, messages:msgs })
+        });
+        if (!r.ok) throw new Error("Anthropic " + r.status + ": " + (await r.text()));
+        const d = await r.json();
+        return d.content.map(c => c.text || "").join("");
+      }
+      async function callOpenAI(msgs) {
+        const r = await fetch("https://api.openai.com/v1/chat/completions", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + settings.apiKey },
+          body: JSON.stringify({ model:settings.model,
+            messages:[{ role:"system", content:VERA_PERSONA }, ...msgs] })
+        });
+        if (!r.ok) throw new Error("OpenAI " + r.status + ": " + (await r.text()));
+        return (await r.json()).choices[0].message.content;
+      }
+
+      async function ask(msgs) {
+        if (settings.provider === "anthropic") return callAnthropic(msgs);
+        if (settings.provider === "openai") return callOpenAI(msgs);
+        return callOllama(msgs);
+      }
+
+      // ---- Send flow ----
+      async function submit() {
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = ""; input.style.height = "auto";
+        history.push({ role:"user", content:text }); render("user", text); persist();
+
+        send.disabled = true;
+        const bubble = render("assistant", "…");
+        try {
+          const reply = await ask(history);
+          bubble.textContent = reply;
+          history.push({ role:"assistant", content:reply }); persist();
+        } catch (e) {
+          bubble.textContent = "⚠️ " + e.message +
+            "\n\n(Open Settings to check the model/provider. Local mode needs Ollama running.)";
+        } finally {
+          send.disabled = false; log.scrollTop = log.scrollHeight;
+        }
+      }
+      send.addEventListener("click", submit);
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+      });
+      input.addEventListener("input", () => {
+        input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 180) + "px";
+      });
+    </script>
+  </body>
+</html>
