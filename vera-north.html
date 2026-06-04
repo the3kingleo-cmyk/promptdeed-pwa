@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Vera North</title>
+    <meta name="color-scheme" content="light dark" />
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --panel: #ffffff;
+        --ink: #16181d;
+        --muted: #5b6470;
+        --line: #e4e7ec;
+        --accent: #3b6ea5;
+        --accent-ink: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14161a;
+          --panel: #1c1f26;
+          --ink: #e9ecf1;
+          --muted: #9aa3b0;
+          --line: #2a2e37;
+          --accent: #6fa8dc;
+          --accent-ink: #0d1b2a;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100dvh;
+      }
+      header {
+        padding: 28px 20px 20px;
+        text-align: center;
+        border-bottom: 1px solid var(--line);
+      }
+      header h1 { margin: 0; font-size: 28px; letter-spacing: 0.5px; }
+      header .clock { color: var(--muted); margin-top: 6px; font-variant-numeric: tabular-nums; }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        gap: 16px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 20px;
+      }
+      .card h2 { margin: 0 0 8px; font-size: 16px; }
+      .card p { margin: 0 0 10px; color: var(--muted); }
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        font: inherit;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .row { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font: inherit;
+        font-weight: 600;
+        background: var(--accent);
+        color: var(--accent-ink);
+        cursor: pointer;
+      }
+      button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+      .saved { color: var(--muted); font-size: 14px; }
+      footer { text-align: center; color: var(--muted); padding: 24px; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Vera North</h1>
+      <div class="clock" id="clock"></div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Who she is</h2>
+        <p>
+          Vera North is curious before she is certain. She treats every question as a
+          chance to learn, says so plainly when she doesn't know, and goes to find out
+          rather than filling the gap with a confident guess.
+        </p>
+        <p>
+          She is reflective and open-minded about ideas, careful about actions — eager
+          to explore any line of thinking, deliberate about anything that touches other
+          people, money, or systems that can't easily be undone. Growing, for her, means
+          getting more honest over time, not less.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>A scratch space that saves to this device automatically.</p>
+        <textarea id="notes" placeholder="Write anything here…"></textarea>
+        <div class="row">
+          <button id="save">Save</button>
+          <button id="clear" class="secondary">Clear</button>
+          <span class="saved" id="status"></span>
+        </div>
+      </section>
+    </main>
+
+    <footer>Vera North · runs entirely on this device</footer>
+
+    <script>
+      // Live clock
+      var clockEl = document.getElementById("clock");
+      function tick() {
+        var now = new Date();
+        clockEl.textContent = now.toLocaleDateString(undefined, {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        }) + " · " + now.toLocaleTimeString();
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      // Notes with local persistence
+      var KEY = "vera.north.notes";
+      var notes = document.getElementById("notes");
+      var status = document.getElementById("status");
+
+      try { notes.value = localStorage.getItem(KEY) || ""; } catch (e) {}
+
+      function save() {
+        try {
+          localStorage.setItem(KEY, notes.value);
+          status.textContent = "Saved " + new Date().toLocaleTimeString();
+        } catch (e) {
+          status.textContent = "Couldn't save on this device.";
+        }
+      }
+
+      document.getElementById("save").addEventListener("click", save);
+      document.getElementById("clear").addEventListener("click", function () {
+        notes.value = "";
+        save();
+      });
+
+      // Autosave shortly after you stop typing
+      var t;
+      notes.addEventListener("input", function () {
+        clearTimeout(t);
+        t = setTimeout(save, 800);
+      });
+    </script>
+  </body>
+</html>
