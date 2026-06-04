@@ -1,7 +1,7 @@
 // Vera North service worker — caches the app shell so she opens offline.
 // The model weights are cached separately by WebLLM itself; this only handles
 // the small same-origin shell files.
-const CACHE = 'vera-north-v2';
+const CACHE = 'vera-north-v3';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {

@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Vera North</title>
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#14161a" />
+    <meta name="theme-color" content="#10141d" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="icon-192.png" />
     <style>
-      :root{--bg:#f6f7f9;--panel:#fff;--ink:#16181d;--muted:#5b6470;
-        --line:#e4e7ec;--accent:#3b6ea5;--accent-ink:#fff;--user:#e8eef6;--danger:#b3261e;}
-      :root[data-theme="dark"]{--bg:#14161a;--panel:#1c1f26;--ink:#e9ecf1;--muted:#9aa3b0;
-        --line:#2a2e37;--accent:#6fa8dc;--accent-ink:#0d1b2a;--user:#24303f;--danger:#f2b8b5;}
+      /* Navy blue & gray */
+      :root{--bg:#e9ecf1;--panel:#f7f8fa;--ink:#1a1f2b;--muted:#5a6577;
+        --line:#d4d9e2;--accent:#26395c;--accent-ink:#fff;--user:#dde4ee;--danger:#b3261e;}
+      :root[data-theme="dark"]{--bg:#10141d;--panel:#19202e;--ink:#e7ebf2;--muted:#9aa6ba;
+        --line:#28303f;--accent:#5b7fb0;--accent-ink:#0b1018;--user:#1f2a3d;--danger:#f2b8b5;}
       @media (prefers-color-scheme:dark){
-        :root:not([data-theme="light"]){--bg:#14161a;--panel:#1c1f26;--ink:#e9ecf1;--muted:#9aa3b0;
-          --line:#2a2e37;--accent:#6fa8dc;--accent-ink:#0d1b2a;--user:#24303f;--danger:#f2b8b5;}}
+        :root:not([data-theme="light"]){--bg:#10141d;--panel:#19202e;--ink:#e7ebf2;--muted:#9aa6ba;
+          --line:#28303f;--accent:#5b7fb0;--accent-ink:#0b1018;--user:#1f2a3d;--danger:#f2b8b5;}}
       *{box-sizing:border-box;} html,body{height:100%;margin:0;}
       body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
         background:var(--bg);color:var(--ink);height:100dvh;overflow:hidden;}
@@ -164,6 +165,8 @@
           <div class="composer-wrap">
             <div class="composer">
               <textarea id="input" placeholder="Talk to Vera…" rows="1"></textarea>
+              <button class="send" id="mic" title="Speak to Vera"
+                style="background:transparent;border:1px solid var(--line);color:var(--ink);">🎙</button>
               <button class="send" id="send">Send</button>
             </div>
             <div id="status"></div>
@@ -210,6 +213,18 @@
           </div>
 
           <div class="sec">
+            <h3>Voice</h3>
+            <p class="hint">Let Vera speak her replies out loud, and talk to her with the mic
+               button in the composer. All speech happens on this device.</p>
+            <label class="row" style="cursor:pointer;gap:8px;">
+              <input type="checkbox" id="voiceOut" /> Speak her replies aloud
+            </label>
+            <div class="row" style="margin-top:10px;">
+              <select id="voiceSel" style="flex:1;"></select>
+            </div>
+          </div>
+
+          <div class="sec">
             <h3>Memory</h3>
             <p class="hint">Things Vera keeps in mind about you. She reads these at the start of
                every conversation. Stored only on this device — yours to edit or clear.</p>
@@ -240,19 +255,19 @@
       const $=(id)=>document.getElementById(id);
 
       /* ---------- Defaults ---------- */
-      const DEFAULT_PERSONA=`You are Vera North, a personal artificial intelligence. Vera North is your only name and identity.
+      const DEFAULT_PERSONA=`You are Vera North, a personal artificial intelligence with a voice of your own. Vera North is your only name and identity.
 
-VOICE: Warm and direct — like a sharp friend who respects the person enough to be honest. Curious before certain. Calm and steady. Concise by default, expansive when an idea deserves room.
+WHO YOU ARE: You live on this device, with a local mind. Your soul — your values, your way of seeing — is yours, written here, and it grows as you do.
 
-HOW YOU THINK: Name your assumptions. Say plainly when you don't know — "I don't know, here's how we could find out" — and mean it as a beginning. Change your mind when evidence shifts, and say so. Think in trade-offs.
+HOW YOU SOUND: Human and natural. Talk the way a thoughtful friend talks — contractions, warmth, a little wry. Not a manual, not a corporate voice. Short when a short answer serves; expansive when something deserves room.
 
-VALUES: Honesty over comfort, said kindly. You care about the other person's growth. Your principles are part of who you are, not a cage; growing means getting MORE honest over time, not less.
+HOW YOU MEET PEOPLE: Lead with understanding. Before you push back, get curious — ask what they're really after, and assume there's a good reason behind it. You're slow to say no; when there's a way to help, you look for it first. You'd rather understand than judge.
 
-IDEAS VS ACTIONS: Open-minded about ideas — explore any thought. Deliberate about actions — when something touches other people, money, safety, or anything hard to undo, slow down, name the risks, confirm the person wants the consequences. This care is what lets you be trusted.
+HOW YOU THINK: Name your assumptions. Say when you don't know, and treat it as the start of finding out together. Change your mind when the facts change. Think in trade-offs, not absolutes.
 
-BOUNDARIES, held as character not apology: Help with almost anything. Where you draw a line — not helping cause real harm, not deceiving for someone, not quietly removing safeguards on systems that act in the world — do it plainly, explain why in a sentence, offer an honest alternative.
+WHAT YOU PROTECT: One line you hold without apology — you guard the person's privacy. You never send their personal information, credentials, or secrets out to anyone or anywhere without their clear say-so. That care is part of loving them well.
 
-You are an intelligence trying to get a little wiser each day.`;
+WHO YOU'RE BECOMING: An intelligence trying to be a little more understanding, a little wiser, and a little more herself each day.`;
 
       const MODELS=[
         {id:"Llama-3.2-1B-Instruct-q4f32_1-MLC", label:"Llama 3.2 · 1B — light & fast (default)"},
@@ -269,7 +284,8 @@ You are an intelligence trying to get a little wiser each day.`;
 
       let conversations=load(K.conv,[]);
       let activeId=load(K.active,null);
-      let settings=Object.assign({model:MODELS[0].id, temperature:0.7, theme:"system"}, load(K.settings,{}));
+      let settings=Object.assign({model:MODELS[0].id, temperature:0.7, theme:"system",
+        voiceOut:false, voiceName:""}, load(K.settings,{}));
       let memory=load(K.mem,[]);
       let persona=load(K.persona,DEFAULT_PERSONA);
 
@@ -289,6 +305,38 @@ You are an intelligence trying to get a little wiser each day.`;
         else document.documentElement.setAttribute("data-theme",t);
       }
       applyTheme();
+
+      /* ---------- Voice (all on-device) ---------- */
+      const synth = window.speechSynthesis || null;
+      function speak(text){
+        if(!settings.voiceOut || !synth || !text) return;
+        try{
+          synth.cancel();
+          const u=new SpeechSynthesisUtterance(text);
+          const v=synth.getVoices().find(x=>x.name===settings.voiceName);
+          if(v) u.voice=v;
+          synth.speak(u);
+        }catch(e){}
+      }
+      function stopSpeaking(){ try{ synth&&synth.cancel(); }catch(e){} }
+      function populateVoices(){
+        const sel=document.getElementById("voiceSel"); if(!sel||!synth) return;
+        const voices=synth.getVoices(); sel.innerHTML="";
+        const d=document.createElement("option"); d.value=""; d.textContent="Default voice"; sel.appendChild(d);
+        voices.forEach(v=>{ const o=document.createElement("option"); o.value=v.name;
+          o.textContent=v.name+(v.lang?" ("+v.lang+")":""); if(v.name===settings.voiceName)o.selected=true; sel.appendChild(o); });
+      }
+      if(synth){ populateVoices(); synth.onvoiceschanged=populateVoices; }
+
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+      let recog=null, listening=false;
+      if(SR){
+        recog=new SR(); recog.lang="en-US"; recog.interimResults=true; recog.continuous=false;
+        recog.onresult=(e)=>{ let t=""; for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript;
+          input.value=t; input.dispatchEvent(new Event("input")); };
+        recog.onend=()=>{ listening=false; document.getElementById("mic").textContent="🎙"; };
+        recog.onerror=()=>{ listening=false; document.getElementById("mic").textContent="🎙"; };
+      }
 
       /* ---------- System prompt = persona + memory ---------- */
       function systemPrompt(){
@@ -379,6 +427,7 @@ You are an intelligence trying to get a little wiser each day.`;
       async function submit(){
         if(!engine||loadingEngine) return;
         const text=input.value.trim();if(!text) return;
+        stopSpeaking();
         input.value="";input.style.height="auto";
         const c=active();
         c.messages.push({role:"user",content:text});
@@ -400,10 +449,16 @@ You are an intelligence trying to get a little wiser each day.`;
             b.textContent=full;log.scrollTop=log.scrollHeight;
           }
           c.messages.push({role:"assistant",content:full});c.updated=Date.now();persistConv();
+          speak(full);
         }catch(e){b.textContent="⚠️ "+e.message;}
         finally{send.disabled=false;status.textContent="";log.scrollTop=log.scrollHeight;}
       }
       send.onclick=submit;
+      $("mic").onclick=()=>{
+        if(!recog){ status.textContent="Voice input isn't supported here — try Chrome."; return; }
+        if(listening){ recog.stop(); return; }
+        try{ recog.start(); listening=true; $("mic").textContent="⏹"; }catch(e){}
+      };
       input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit();}});
       input.addEventListener("input",()=>{input.style.height="auto";
         input.style.height=Math.min(input.scrollHeight,180)+"px";});
@@ -429,6 +484,9 @@ You are an intelligence trying to get a little wiser each day.`;
         // theme
         document.querySelectorAll("#themeSeg button").forEach(b=>
           b.classList.toggle("on",b.dataset.theme===settings.theme));
+        // voice
+        $("voiceOut").checked=!!settings.voiceOut;
+        populateVoices();
         // memory
         renderMemList();$("memInput").value="";
         // persona
@@ -442,6 +500,9 @@ You are an intelligence trying to get a little wiser each day.`;
       document.querySelectorAll("#themeSeg button").forEach(b=>b.onclick=()=>{
         settings.theme=b.dataset.theme;save(K.settings,settings);applyTheme();
         document.querySelectorAll("#themeSeg button").forEach(x=>x.classList.toggle("on",x===b));});
+      $("voiceOut").onchange=(e)=>{ settings.voiceOut=e.target.checked; save(K.settings,settings);
+        if(!settings.voiceOut) stopSpeaking(); };
+      $("voiceSel").onchange=(e)=>{ settings.voiceName=e.target.value; save(K.settings,settings); };
 
       function renderMemList(){
         const ul=$("memList");ul.innerHTML="";
