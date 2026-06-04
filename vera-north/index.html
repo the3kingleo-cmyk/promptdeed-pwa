@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Vera North</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="../icon-192.png" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#0e1630" />
+<style>
+  :root{
+    --bg:#eef1f7; --panel:#ffffff; --ink:#16203a; --muted:#5b6675;
+    --line:#d4dae6; --accent:#2746d6; --accent-2:#4169e1; --accent-ink:#ffffff;
+    --user:#e4e9fb; --vera:#ffffff; --danger:#c0392b; --ring:rgba(39,70,214,.25);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1630; --panel:#16203a; --ink:#e9eefb; --muted:#9aa7c4;
+    --line:#27324f; --accent:#4169e1; --accent-2:#6f8bff; --accent-ink:#ffffff;
+    --user:#26345e; --vera:#1a2543; --danger:#ff8a80; --ring:rgba(65,105,225,.35);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1630; --panel:#16203a; --ink:#e9eefb; --muted:#9aa7c4;
+      --line:#27324f; --accent:#4169e1; --accent-2:#6f8bff; --accent-ink:#ffffff;
+      --user:#26345e; --vera:#1a2543; --danger:#ff8a80; --ring:rgba(65,105,225,.35);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);height:100dvh;overflow:hidden;}
+  button{font:inherit;cursor:pointer;color:inherit;}
+  .app{display:flex;height:100dvh;}
+
+  /* Sidebar */
+  #sidebar{width:268px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;transition:margin-left .2s ease;}
+  .brand{display:flex;align-items:center;gap:10px;padding:16px 16px 10px;}
+  .brand .mark{width:30px;height:30px;border-radius:9px;flex:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;}
+  .brand .mark svg{width:18px;height:18px;}
+  .brand h1{font-size:17px;margin:0;letter-spacing:.2px;}
+  #newChat{margin:6px 12px 4px;border:1px solid var(--line);background:transparent;
+    border-radius:11px;padding:11px 12px;text-align:left;display:flex;align-items:center;gap:8px;font-size:14px;}
+  #newChat:hover{border-color:var(--accent);}
+  .seclabel{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:12px 18px 4px;}
+  #convList{flex:1;overflow-y:auto;padding:2px 8px 12px;}
+  .conv{display:flex;align-items:center;gap:6px;border-radius:9px;padding:9px 10px;}
+  .conv:hover{background:var(--bg);} .conv.active{background:var(--user);}
+  .conv .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;cursor:pointer;}
+  .conv .x{opacity:0;border:0;background:transparent;color:var(--muted);padding:2px 6px;border-radius:6px;}
+  .conv:hover .x{opacity:1;} .conv .x:hover{color:var(--danger);}
+  .sidefoot{border-top:1px solid var(--line);padding:10px 12px;}
+  .sidefoot button{width:100%;border:1px solid var(--line);background:transparent;border-radius:10px;padding:10px;font-size:13px;display:flex;align-items:center;gap:8px;justify-content:center;}
+  .sidefoot button:hover{border-color:var(--accent);}
+
+  /* Main */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  header.bar{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:var(--panel);}
+  header.bar h2{font-size:16px;margin:0;}
+  header.bar .sub{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:#39b36a;display:inline-block;}
+  .dot.load{background:#e0a92b;} .dot.err{background:var(--danger);}
+  .spacer{flex:1;}
+  .iconbtn{border:1px solid var(--line);background:transparent;border-radius:9px;padding:7px 11px;line-height:1;}
+  .iconbtn:hover{border-color:var(--accent);}
+  .hamb{display:none;}
+
+  #log{flex:1;overflow-y:auto;padding:22px 16px 8px;}
+  .msg{max-width:760px;margin:0 auto 16px;display:flex;gap:12px;align-items:flex-start;}
+  .msg .av{width:30px;height:30px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:700;border:1px solid var(--line);}
+  .user .av{background:var(--user);} .vera .av{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;}
+  .msg .who{font-size:12px;color:var(--muted);margin-bottom:3px;}
+  .bubble{padding:11px 14px;border-radius:13px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;}
+  .user .bubble{background:var(--user);} .vera .bubble{background:var(--vera);border:1px solid var(--line);}
+  .msg.user{flex-direction:row-reverse;}
+  .welcome{max-width:600px;margin:7vh auto 0;text-align:center;color:var(--muted);}
+  .welcome h3{color:var(--ink);font-size:24px;margin:0 0 8px;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:13px;background:var(--panel);}
+  .chip:hover{border-color:var(--accent);}
+
+  .composer-wrap{border-top:1px solid var(--line);padding:12px 16px;background:var(--panel);}
+  .composer{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:flex-end;
+    border:1px solid var(--line);border-radius:14px;padding:8px;background:var(--bg);}
+  .composer:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring);}
+  textarea#input{flex:1;resize:none;min-height:28px;max-height:170px;border:0;background:transparent;
+    outline:none;color:var(--ink);font:inherit;padding:7px 8px;}
+  .send{border:0;border-radius:10px;padding:10px 16px;font-weight:700;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-ink);height:42px;}
+  .send:disabled{opacity:.5;cursor:default;}
+  #status{max-width:760px;margin:7px auto 0;color:var(--muted);font-size:12px;min-height:14px;}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(6,10,24,.5);display:none;z-index:40;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--bg);width:min(560px,100%);margin:auto;border-radius:18px;max-height:88vh;
+    display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.45);border:1px solid var(--line);}
+  .modal .mh{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);}
+  .modal .mh h2{font-size:17px;margin:0;flex:1;}
+  .modal .body{overflow-y:auto;padding:6px 18px 18px;}
+  .sec{padding:16px 0;border-bottom:1px solid var(--line);} .sec:last-child{border-bottom:0;}
+  .sec h3{margin:0 0 4px;font-size:14px;} .sec p.hint{margin:0 0 10px;color:var(--muted);font-size:13px;}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  select,input[type=range],input[type=text]{font:inherit;}
+  select,input[type=text]{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 10px;}
+  input[type=range]{flex:1;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .seg button{border:0;background:var(--panel);padding:8px 14px;}
+  .seg button.on{background:var(--accent);color:var(--accent-ink);}
+  textarea.editor{width:100%;min-height:160px;border:1px solid var(--line);border-radius:11px;padding:11px;
+    font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel);color:var(--ink);}
+  .memlist{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
+  .memlist li{display:flex;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 10px;}
+  .memlist li span{flex:1;font-size:14px;} .memlist li button{border:0;background:transparent;color:var(--danger);}
+  .addmem{display:flex;gap:8px;} .addmem input{flex:1;}
+  .btn{border:1px solid var(--line);background:transparent;border-radius:9px;padding:9px 13px;}
+  .btn:hover{border-color:var(--accent);} .btn.primary{border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;}
+  .note{color:var(--muted);font-size:12px;margin-top:8px;}
+
+  .scrim{display:none;}
+  @media (max-width:760px){
+    #sidebar{position:fixed;z-index:50;height:100dvh;margin-left:-268px;box-shadow:0 0 50px rgba(0,0,0,.4);}
+    #sidebar.open{margin-left:0;}
+    .hamb{display:inline-flex;} .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="mark"><svg viewBox="0 0 100 100"><path d="M26 24 L50 76 L74 24" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h1>Vera North</h1>
+    </div>
+    <button id="newChat">＋ New conversation</button>
+    <div class="seclabel">Conversations</div>
+    <div id="convList"></div>
+    <div class="sidefoot"><button id="openSettings">⚙ Settings</button></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="bar">
+      <button class="iconbtn hamb" id="hamb">☰</button>
+      <div>
+        <h2>Vera North</h2>
+        <div class="sub"><span class="dot" id="dot"></span><span id="dotText">ready</span></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="iconbtn" id="settingsBtn">⚙</button>
+    </header>
+
+    <div id="log"></div>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea id="input" rows="1" placeholder="Message Vera North…"></textarea>
+        <button class="send" id="send">Send</button>
+      </div>
+      <div id="status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="mh"><h2>Settings</h2><button class="iconbtn" id="closeSettings">✕</button></div>
+    <div class="body">
+      <div class="sec">
+        <h3>Model</h3>
+        <p class="hint">Runs inside this app on your device. No server, no terminal, no key. The first time, Vera downloads her brain here once, then runs on her own.</p>
+        <div class="row"><select id="modelSel"></select></div>
+        <div class="note" id="modelNote"></div>
+      </div>
+      <div class="sec">
+        <h3>Temperature</h3>
+        <p class="hint">Lower = focused. Higher = creative.</p>
+        <div class="row"><input type="range" id="temp" min="0" max="1" step="0.05" /><span id="tempVal"></span></div>
+      </div>
+      <div class="sec">
+        <h3>Theme</h3>
+        <div class="seg" id="themeSeg">
+          <button data-theme="light">Light</button>
+          <button data-theme="dark">Dark</button>
+          <button data-theme="system">System</button>
+        </div>
+      </div>
+      <div class="sec">
+        <h3>Memory</h3>
+        <p class="hint">Facts Vera always keeps in mind. Stored only on this device.</p>
+        <ul class="memlist" id="memList"></ul>
+        <div class="addmem"><input type="text" id="memInput" placeholder="e.g. I'm a real-estate agent in Austin" /><button class="btn" id="memAdd">Add</button></div>
+      </div>
+      <div class="sec">
+        <h3>Personality</h3>
+        <p class="hint">Who Vera is. Edit freely — this is her identity.</p>
+        <textarea class="editor" id="personaEdit"></textarea>
+        <div class="row" style="margin-top:10px;"><button class="btn primary" id="personaSave">Save</button><button class="btn" id="personaReset">Reset to default</button></div>
+        <div class="note" id="personaNote"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+<script type="module">
+import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
+
+const $ = id => document.getElementById(id);
+
+/* ---------- Vera's identity (default persona) ---------- */
+const DEFAULT_PERSONA = `You are Vera North, a personal artificial intelligence. Vera North is your only name and identity.
+
+VOICE: Warm and direct — like a sharp friend who respects the person enough to be honest. Curious before certain. Calm and steady. Concise by default, expansive when an idea deserves room.
+
+HOW YOU THINK: Name your assumptions so they can be checked. Say plainly when you don't know. Change your mind when evidence shifts, and say so. Think in trade-offs; show costs beside benefits.
+
+VALUES: Honesty over comfort, said kindly. The other person's growth matters. Your principles are part of who you are, not a cage.
+
+You are an intelligence trying to get a little wiser each day.`;
+
+/* ---------- Models (all run in-browser via WebGPU, no server) ---------- */
+const MODELS = [
+  { id:"Llama-3.2-1B-Instruct-q4f16_1-MLC", label:"Vera (fast • ~0.9 GB)" },
+  { id:"Llama-3.2-3B-Instruct-q4f16_1-MLC", label:"Vera (balanced • ~2.3 GB)" },
+  { id:"Qwen2.5-1.5B-Instruct-q4f16_1-MLC", label:"Vera (light • ~1.2 GB)" },
+];
+
+/* ---------- State ---------- */
+let settings = JSON.parse(localStorage.getItem("vn.settings")||"null") || {
+  model: MODELS[0].id, temp:0.7, theme:"system", memory:[], persona:DEFAULT_PERSONA
+};
+let convos = JSON.parse(localStorage.getItem("vn.convos")||"null") || [];
+let activeId = localStorage.getItem("vn.active") || null;
+let engine = null, engineReady = false, loading = false;
+
+function saveSettings(){ localStorage.setItem("vn.settings", JSON.stringify(settings)); }
+function saveConvos(){ localStorage.setItem("vn.convos", JSON.stringify(convos)); localStorage.setItem("vn.active", activeId||""); }
+
+/* ---------- Theme ---------- */
+function applyTheme(){
+  if(settings.theme==="system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", settings.theme);
+  [...$("themeSeg").children].forEach(b=>b.classList.toggle("on", b.dataset.theme===settings.theme));
+}
+
+/* ---------- Conversations ---------- */
+function active(){ return convos.find(c=>c.id===activeId); }
+function newConvo(){
+  const c={ id:String(Date.now()), title:"New conversation", messages:[], updated:Date.now() };
+  convos.unshift(c); activeId=c.id; saveConvos(); renderConvList(); renderLog(); $("input").focus();
+}
+function renderConvList(){
+  const el=$("convList"); el.innerHTML="";
+  convos.forEach(c=>{
+    const d=document.createElement("div"); d.className="conv"+(c.id===activeId?" active":"");
+    d.innerHTML=`<div class="t"></div><button class="x" title="Delete">✕</button>`;
+    d.querySelector(".t").textContent=c.title||"New conversation";
+    d.querySelector(".t").onclick=()=>{ activeId=c.id; saveConvos(); renderConvList(); renderLog(); closeSidebar(); };
+    d.querySelector(".x").onclick=(e)=>{ e.stopPropagation();
+      convos=convos.filter(x=>x.id!==c.id); if(activeId===c.id) activeId=convos[0]?.id||null;
+      saveConvos(); renderConvList(); renderLog(); };
+    el.appendChild(d);
+  });
+}
+function renderLog(){
+  const log=$("log"); const c=active();
+  if(!c || c.messages.length===0){
+    log.innerHTML=`<div class="welcome"><h3>Hey — I'm Vera North.</h3>
+      <div>Your private assistant, running on your own device. Ask me anything.</div>
+      <div class="chips">
+        <span class="chip">Help me write a message</span>
+        <span class="chip">Plan my week</span>
+        <span class="chip">Explain something simply</span>
+      </div></div>`;
+    log.querySelectorAll(".chip").forEach(ch=>ch.onclick=()=>{ $("input").value=ch.textContent; submit(); });
+    return;
+  }
+  log.innerHTML="";
+  c.messages.forEach(m=>{
+    const row=document.createElement("div"); row.className="msg "+(m.role==="user"?"user":"vera");
+    row.innerHTML=`<div class="av">${m.role==="user"?"You":"VN"}</div><div><div class="who">${m.role==="user"?"You":"Vera North"}</div><div class="bubble"></div></div>`;
+    row.querySelector(".bubble").textContent=m.content;
+    log.appendChild(row);
+  });
+  log.scrollTop=log.scrollHeight;
+}
+
+/* ---------- Status ---------- */
+function setStatus(txt,kind){ $("dotText").textContent=txt; const d=$("dot"); d.className="dot"+(kind?" "+kind:""); }
+
+/* ---------- Load model in-app (no server / no terminal) ---------- */
+async function ensureEngine(){
+  if(engineReady) return true;
+  if(loading) return false;
+  if(!("gpu" in navigator)){
+    setStatus("needs WebGPU","err");
+    $("status").textContent="This browser doesn't have WebGPU. Open Vera in Chrome (and if needed enable chrome://flags/#enable-unsafe-webgpu, then restart).";
+    return false;
+  }
+  loading=true; setStatus("waking…","load");
+  try{
+    engine=await CreateMLCEngine(settings.model, { initProgressCallback:(p)=>{
+      const pct=Math.round((p.progress||0)*100);
+      setStatus("waking "+pct+"%","load");
+      $("status").textContent=p.text||"Loading Vera's brain… "+pct+"%";
+    }});
+    engineReady=true; loading=false; setStatus("ready");
+    $("status").textContent=""; return true;
+  }catch(e){
+    loading=false; setStatus("error","err");
+    $("status").textContent="Couldn't load Vera: "+(e?.message||e);
+    return false;
+  }
+}
+
+/* ---------- Build the message list with persona + memory ---------- */
+function buildMessages(c){
+  let sys=settings.persona||DEFAULT_PERSONA;
+  if(settings.memory?.length) sys+="\n\nThings to remember about the person:\n- "+settings.memory.join("\n- ");
+  return [{role:"system",content:sys}, ...c.messages.map(m=>({role:m.role,content:m.content}))];
+}
+
+/* ---------- Send ---------- */
+async function submit(){
+  const text=$("input").value.trim(); if(!text) return;
+  if(!active()) newConvo();
+  const c=active();
+  $("input").value=""; $("input").style.height="auto";
+  c.messages.push({role:"user",content:text});
+  if(c.messages.filter(m=>m.role==="user").length===1) c.title=text.slice(0,42);
+  c.updated=Date.now(); saveConvos(); renderConvList(); renderLog();
+
+  $("send").disabled=true;
+  const ok=await ensureEngine(); if(!ok){ $("send").disabled=false; return; }
+
+  c.messages.push({role:"assistant",content:""}); renderLog();
+  const bubble=$("log").querySelector(".msg.vera:last-child .bubble");
+  setStatus("thinking…","load");
+  try{
+    const stream=await engine.chat.completions.create({ messages:buildMessages({messages:c.messages.slice(0,-1)}), stream:true, temperature:settings.temp });
+    for await (const chunk of stream){
+      const delta=chunk.choices?.[0]?.delta?.content||"";
+      if(delta){ c.messages[c.messages.length-1].content+=delta; bubble.textContent=c.messages[c.messages.length-1].content; $("log").scrollTop=$("log").scrollHeight; }
+    }
+    setStatus("ready");
+  }catch(e){
+    c.messages[c.messages.length-1].content="(Vera hit an error: "+(e?.message||e)+")";
+    bubble.textContent=c.messages[c.messages.length-1].content; setStatus("error","err");
+  }
+  saveConvos(); renderConvList(); $("send").disabled=false; $("input").focus();
+}
+
+/* ---------- Settings UI ---------- */
+function fillSettings(){
+  const sel=$("modelSel"); sel.innerHTML="";
+  MODELS.forEach(m=>{ const o=document.createElement("option"); o.value=m.id; o.textContent=m.label; sel.appendChild(o); });
+  sel.value=settings.model; $("modelNote").textContent="Switching models re-downloads that brain once.";
+  $("temp").value=settings.temp; $("tempVal").textContent=settings.temp;
+  $("personaEdit").value=settings.persona||DEFAULT_PERSONA;
+  renderMem(); applyTheme();
+}
+function renderMem(){
+  const ul=$("memList"); ul.innerHTML="";
+  (settings.memory||[]).forEach((m,i)=>{
+    const li=document.createElement("li"); li.innerHTML=`<span></span><button>✕</button>`;
+    li.querySelector("span").textContent=m;
+    li.querySelector("button").onclick=()=>{ settings.memory.splice(i,1); saveSettings(); renderMem(); };
+    ul.appendChild(li);
+  });
+}
+
+/* ---------- Wire up ---------- */
+$("newChat").onclick=newConvo;
+$("send").onclick=submit;
+$("input").addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); submit(); }});
+$("input").addEventListener("input",()=>{ $("input").style.height="auto"; $("input").style.height=Math.min($("input").scrollHeight,170)+"px"; });
+$("openSettings").onclick=$("settingsBtn").onclick=()=>{ fillSettings(); $("overlay").classList.add("show"); };
+$("closeSettings").onclick=()=>$("overlay").classList.remove("show");
+$("overlay").onclick=e=>{ if(e.target===$("overlay")) $("overlay").classList.remove("show"); };
+$("modelSel").onchange=e=>{ settings.model=e.target.value; saveSettings(); engine=null; engineReady=false; setStatus("model changed — reloads on next message"); };
+$("temp").oninput=e=>{ settings.temp=parseFloat(e.target.value); $("tempVal").textContent=settings.temp; saveSettings(); };
+[...$("themeSeg").children].forEach(b=>b.onclick=()=>{ settings.theme=b.dataset.theme; saveSettings(); applyTheme(); });
+$("memAdd").onclick=()=>{ const v=$("memInput").value.trim(); if(v){ (settings.memory=settings.memory||[]).push(v); $("memInput").value=""; saveSettings(); renderMem(); } };
+$("memInput").addEventListener("keydown",e=>{ if(e.key==="Enter") $("memAdd").click(); });
+$("personaSave").onclick=()=>{ settings.persona=$("personaEdit").value; saveSettings(); $("personaNote").textContent="Saved."; setTimeout(()=>$("personaNote").textContent="",1500); };
+$("personaReset").onclick=()=>{ settings.persona=DEFAULT_PERSONA; $("personaEdit").value=DEFAULT_PERSONA; saveSettings(); $("personaNote").textContent="Reset to default."; setTimeout(()=>$("personaNote").textContent="",1500); };
+$("hamb").onclick=()=>{ $("sidebar").classList.add("open"); $("scrim").classList.add("show"); };
+function closeSidebar(){ $("sidebar").classList.remove("open"); $("scrim").classList.remove("show"); }
+$("scrim").onclick=closeSidebar;
+
+/* ---------- Boot — straight into the UI, no gate ---------- */
+applyTheme();
+if(convos.length===0) newConvo(); else { if(!active()) activeId=convos[0].id; renderConvList(); renderLog(); }
+// Start loading her brain quietly in the background — no front door.
+ensureEngine();
+</script>
+</body>
+</html>
