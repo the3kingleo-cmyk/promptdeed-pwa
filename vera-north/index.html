@@ -9,6 +9,14 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="icon-192.png" />
+<script>
+/* on-screen diagnostics so nothing fails silently */
+function vnShow(m,bad){var d=document.getElementById('vn-diag');if(!d){d=document.createElement('div');d.id='vn-diag';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;padding:10px 12px;border-radius:10px;font:13px/1.4 system-ui;white-space:pre-wrap';(document.body||document.documentElement).appendChild(d);}d.style.background=bad?'#b3261e':'#1f5f44';d.style.color='#fff';d.textContent=m;}
+window.addEventListener('error',function(e){vnShow('ERROR: '+(e.message||'')+(e.filename?(' ('+String(e.filename).split('/').pop()+':'+e.lineno+')'):''),true);});
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;vnShow('LOAD PROBLEM: '+((r&&r.message)?r.message:r),true);});
+window.addEventListener('DOMContentLoaded',function(){vnShow('Vera North page loaded OK. You should see "Wake Vera" above.');});
+</script>
+
     <style>
       :root{--bg:#f6f7f9;--panel:#fff;--ink:#16181d;--muted:#5b6470;
         --line:#e4e7ec;--accent:#3b6ea5;--accent-ink:#fff;--user:#e8eef6;--danger:#b3261e;}
