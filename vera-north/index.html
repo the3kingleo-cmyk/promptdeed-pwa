@@ -66,7 +66,15 @@
   const $=id=>document.getElementById(id);
   const log=$("log"), input=$("input"), send=$("send"), status=$("status"), sub=$("sub");
   const PERSONA="You are Vera North, a personal artificial intelligence. Vera North is your only name and identity. Warm, direct, honest, concise. You run privately on the user's own device.";
+  const HIST_MAX = 200; // keep the most recent N turns so localStorage can't grow unbounded
+  function saveHistory(){
+    if (history.length > HIST_MAX) history = history.slice(-HIST_MAX);
+    try { localStorage.setItem("vn.hist", JSON.stringify(history)); }
+    catch (e) { history = history.slice(-Math.floor(HIST_MAX/2));
+      try { localStorage.setItem("vn.hist", JSON.stringify(history)); } catch (_) {} }
+  }
   let history = JSON.parse(localStorage.getItem("vn.hist")||"[]");
+  if (history.length > HIST_MAX) { history = history.slice(-HIST_MAX); saveHistory(); }
   let engine=null, ready=false, busy=false;
 
   function setStatus(t){ status.textContent=t||""; }
@@ -115,7 +123,7 @@
     const text=input.value.trim(); if(!text||busy) return;
     if(!ready){ setStatus("Vera is still waking up — one moment…"); return; }
     busy=true; input.value=""; input.style.height="auto";
-    history.push({role:"user",content:text}); localStorage.setItem("vn.hist",JSON.stringify(history));
+    history.push({role:"user",content:text}); saveHistory();
     bubble("user",text);
     const b=bubble("vera",""); setStatus("Vera is thinking…"); send.disabled=true;
     try{
@@ -123,7 +131,7 @@
         messages:[{role:"system",content:PERSONA},...history], stream:true, temperature:0.7 });
       let full="";
       for await(const c of stream){ full+=c.choices?.[0]?.delta?.content||""; b.textContent=full; document.querySelector("main").scrollTop=1e9; }
-      history.push({role:"assistant",content:full}); localStorage.setItem("vn.hist",JSON.stringify(history));
+      history.push({role:"assistant",content:full}); saveHistory();
     }catch(e){ b.textContent="⚠️ "+(e&&e.message?e.message:e); }
     setStatus(""); send.disabled=false; busy=false; input.focus();
   }
