@@ -73,11 +73,14 @@
   function setSub(t){ sub.textContent=t; }
   function bubble(role,text){
     const w=$("welcome"); if(w) w.remove();
-    const row=document.createElement("div"); row.className="msg "+(role==="user"?"user":"vera");
-    row.innerHTML='<div class="av">'+(role==="user"?"You":"VN")+'</div><div class="bubble"></div>';
-    row.querySelector(".bubble").textContent=text; log.appendChild(row);
+    const isUser = role === "user";
+    const row=document.createElement("div"); row.className="msg "+(isUser?"user":"vera");
+    const av=document.createElement("div"); av.className="av"; av.textContent=isUser?"You":"VN";
+    const bub=document.createElement("div"); bub.className="bubble"; bub.textContent=text;
+    row.appendChild(av); row.appendChild(bub);
+    log.appendChild(row);
     document.querySelector("main").scrollTop=document.querySelector("main").scrollHeight;
-    return row.querySelector(".bubble");
+    return bub;
   }
   history.forEach(m=>bubble(m.role,m.content));
 
