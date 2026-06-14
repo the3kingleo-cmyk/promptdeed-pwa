@@ -21,11 +21,16 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  const url = new URL(e.request.url);
+  if (url.origin !== self.location.origin) return; // never cache cross-origin
   e.respondWith(
     caches.match(e.request).then((cached) => {
       return cached || fetch(e.request).then((resp) => {
-        const respClone = resp.clone();
-        caches.open(CACHE_NAME).then((c) => { try { c.put(e.request, respClone); } catch (err) {} });
+        // Only cache successful, same-origin, non-opaque responses.
+        if (resp && resp.ok && resp.type === 'basic') {
+          const respClone = resp.clone();
+          caches.open(CACHE_NAME).then((c) => { try { c.put(e.request, respClone); } catch (err) {} });
+        }
         return resp;
       }).catch(() => caches.match('./index.html'));
     })
