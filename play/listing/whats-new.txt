@@ -1,0 +1,6 @@
+Initial release.
+
+• 50 production-grade AI prompts across 10 real estate categories
+• Worked examples and field-by-field input templates for the launch prompt
+• Works offline once installed
+• Free preview of the first 5 prompts; unlock the full library with your launch code
