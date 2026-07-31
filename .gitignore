@@ -1,0 +1,6 @@
+node_modules/
+scraper/penny.db
+scraper/*.db
+.env
+.env.local
+*.log
