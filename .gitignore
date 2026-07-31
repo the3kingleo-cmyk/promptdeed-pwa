@@ -1,0 +1,22 @@
+# Never commit secrets
+*.json.key
+*-service-account*.json
+play-service-account*.json
+.secrets/
+.env
+.env.*
+
+# Android / Bubblewrap build artifacts
+play/build/
+play/app/
+play/.bubblewrap/
+play/android.keystore
+play/android.keystore.bak
+play/*.aab
+play/*.apk
+play/*-release.aab
+
+# Node
+node_modules/
+npm-debug.log
+.npm/

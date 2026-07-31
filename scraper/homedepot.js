@@ -107,16 +107,24 @@ async function scrape() {
   return deals;
 }
 
+// Quote any CSV field and neutralize spreadsheet-formula injection (leading = + - @ tab CR).
+function csvCell(v) {
+  if (v === null || v === undefined) return '';
+  let s = String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+
 function toCSV(deals) {
   const headers = ['Title', 'Sale Price', 'Original Price', 'Savings', '% Off', 'Badge', 'URL'];
   const rows = deals.map(d => [
-    `"${d.title.replace(/"/g, '""')}"`,
-    d.salePrice,
-    d.originalPrice,
-    d.savings,
-    d.percentOff,
-    d.badge,
-    d.url,
+    csvCell(d.title),
+    csvCell(d.salePrice),
+    csvCell(d.originalPrice),
+    csvCell(d.savings),
+    csvCell(d.percentOff),
+    csvCell(d.badge),
+    csvCell(d.url),
   ].join(','));
   return [headers.join(','), ...rows].join('\n');
 }

@@ -1,0 +1,36 @@
+Stop getting generic AI output. Start getting copy that closes.
+
+Promptdeed is a focused library of 50 production-grade prompts designed specifically for residential real estate agents. Each prompt is engineered by working agents — not generic AI writers — so the output you paste into ChatGPT or Claude already sounds like a top producer who knows the market.
+
+WHAT'S INSIDE
+
+• Listing Descriptions & Property Marketing — MLS-compliant copy that lifts a property without crossing fair-housing lines.
+• Social Media Content — Instagram, Facebook, and TikTok captions, reel scripts, and hooks built for agents.
+• Lead Follow-Up & Nurture Emails — sequences that turn cold leads warm and warm leads into clients.
+• FSBO & Expired Listing Scripts — battle-tested conversion scripts for the toughest seller leads.
+• Buyer Consultation & Discovery — questions and frameworks for great buyer meetings.
+• Seller Listing Presentations — win the listing with confidence.
+• Open House Marketing & Scripts — drive traffic, work the sign-in sheet, and follow up.
+• Market Reports & Neighborhood Guides — position yourself as the local expert.
+• Negotiation, Offers & Closing Communication — clear, calm comms through the entire deal.
+• Personal Branding, Bio & Video Scripts — build a brand and step in front of the camera.
+
+HOW IT WORKS
+
+1. Open the app and pick a prompt.
+2. Tap "Copy Prompt" — the prompt drops into your clipboard.
+3. Paste it into ChatGPT, Claude, Gemini, or whatever AI you already use.
+4. Fill in the field-by-field inputs the prompt walks you through.
+5. Get copy you can use today — not the generic mush AI gives you with a one-line ask.
+
+WORKS OFFLINE
+
+Promptdeed is a progressive web app. Once installed, every prompt is cached on your device — no signal needed when you're showing property in a basement or working from the road.
+
+WHO IT'S FOR
+
+US-based residential real estate agents who already use ChatGPT or Claude and want the output to be 10x better — without learning prompt engineering.
+
+PRIVACY
+
+Promptdeed never sees what you generate. The app does not log your prompts, does not collect analytics, and does not send anything to a server. Everything happens on your device.
