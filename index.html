@@ -88,6 +88,19 @@ nav button:hover{background:#243657}
 .modal-card p{margin:0 0 12px;font-size:14px;color:#6B7280}
 .modal-card .row{display:flex;gap:8px;margin-top:8px}
 .modal-card .row button{flex:1}
+.oc-badge{display:inline-block;background:#2F7D5C;color:#FAF7F2;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.04em;vertical-align:middle;margin-left:6px}
+.oc-run-btn{background:#2F7D5C;color:#FAF7F2;border:none;padding:11px 18px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;width:100%;margin-top:10px}
+.oc-run-btn:hover{background:#246248}
+.oc-run-btn:disabled{opacity:.55;cursor:not-allowed}
+.oc-response{background:#F5F1EA;border:1px solid #E6E1D9;border-radius:6px;padding:12px;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word;margin-top:10px;min-height:60px;display:none}
+.oc-response.active{display:block}
+.oc-textarea{width:100%;padding:11px 12px;border:1px solid #E6E1D9;border-radius:6px;font-size:13px;background:#fff;color:#1A1A1A;font-family:inherit;line-height:1.5;resize:vertical;min-height:80px}
+.oc-textarea:focus{outline:none;border-color:#2F7D5C}
+.oc-note{font-size:12px;color:#6B7280;margin-top:6px}
+@media (prefers-color-scheme:dark){
+  .oc-textarea{background:#0E1525!important;color:#E8E6E1!important;border-color:#243047!important}
+  .oc-response{background:#0B1322!important;border-color:#243047!important;color:#E8E6E1!important}
+}
 </style>
 </head>
 <body>
@@ -129,6 +142,48 @@ const STATE = {
   view: 'home',
   catId: null,
   promptId: null
+};
+
+/* ---------- OPENCLAW ---------- */
+const OC = {
+  getUrl() { return localStorage.getItem('oc_url') || 'http://localhost:11434'; },
+  getModel() { return localStorage.getItem('oc_model') || ''; },
+  save(url, model) {
+    localStorage.setItem('oc_url', (url || 'http://localhost:11434').replace(/\/$/, ''));
+    localStorage.setItem('oc_model', model || '');
+  },
+  async listModels(url) {
+    const r = await fetch(`${url}/api/tags`, { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    return (j.models || []).map(m => m.name);
+  },
+  async generate(url, model, systemText, userText, onChunk, signal) {
+    const r = await fetch(`${url}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, system: systemText, prompt: userText, stream: true }),
+      signal
+    });
+    if (!r.ok) {
+      const msg = await r.text().catch(() => '');
+      throw new Error(`Ollama ${r.status}${msg ? ': ' + msg.slice(0, 200) : ''}`);
+    }
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try { const obj = JSON.parse(line); if (obj.response) onChunk(obj.response); } catch {}
+      }
+    }
+  }
 };
 
 /* ---------- HELPERS ---------- */
@@ -265,13 +320,57 @@ function renderPrompt(pid) {
       <div class="pb-section-label">Example Output</div>
       <pre id="ex-out"></pre>
     </div>
+    <div class="prompt-block" id="oc-panel">
+      <div class="pb-cat" style="display:flex;align-items:center;gap:6px">OpenClaw<span class="oc-badge">LOCAL AI</span></div>
+      <p style="margin:6px 0 10px;font-size:13px;color:#6B7280">Edit the prompt and inputs below, then run against your local Ollama model. Requires Ollama running at the configured endpoint.</p>
+      <div class="pb-section-label">Editable Prompt</div>
+      <textarea class="oc-textarea" id="oc-prompt-ta" rows="8"></textarea>
+      <div class="pb-section-label">Your Input</div>
+      <textarea class="oc-textarea" id="oc-input-ta" rows="5"></textarea>
+      <button class="oc-run-btn" id="oc-run"></button>
+      <pre class="oc-response" id="oc-out"></pre>
+      <div class="oc-note" id="oc-err"></div>
+    </div>
   `;
   $('#prompt-text').textContent = p.text;
   $('#ex-in').textContent = p.input;
   $('#ex-out').textContent = p.output;
+  $('#oc-prompt-ta').value = p.text;
+  $('#oc-input-ta').value = p.input;
+  const ocModel = OC.getModel();
+  const ocRunBtn = $('#oc-run');
+  ocRunBtn.textContent = ocModel ? '▶ Run with Ollama (' + ocModel + ')' : '⚙ Configure Ollama in Settings first';
+  if (!ocModel) ocRunBtn.disabled = true;
   $('#back-cat').addEventListener('click', () => renderCategory(cat.id));
   $('#copy-prompt').addEventListener('click', (e) => copyToClipboard(p.text, e.currentTarget));
   $('#copy-input').addEventListener('click', (e) => copyToClipboard(p.input, e.currentTarget));
+  let _ocAbort = null;
+  ocRunBtn.addEventListener('click', async () => {
+    const model = OC.getModel();
+    if (!model) { showModal('OpenClaw', 'No model configured. Go to Settings → OpenClaw to set your Ollama endpoint and model.'); return; }
+    const url = OC.getUrl();
+    const out = $('#oc-out');
+    const errEl = $('#oc-err');
+    const btn = $('#oc-run');
+    if (_ocAbort) { _ocAbort.abort(); _ocAbort = null; }
+    _ocAbort = new AbortController();
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating…';
+    out.textContent = '';
+    out.classList.add('active');
+    errEl.textContent = '';
+    try {
+      await OC.generate(url, model, $('#oc-prompt-ta').value, $('#oc-input-ta').value, (c) => { out.textContent += c; }, _ocAbort.signal);
+      btn.textContent = '✓ Done — Run Again (' + model + ')';
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        errEl.textContent = 'Error: ' + e.message + '. Is Ollama running? If you see a CORS error, try: OLLAMA_ORIGINS=* ollama serve';
+      }
+      btn.textContent = '▶ Run with Ollama (' + model + ')';
+    }
+    btn.disabled = false;
+    _ocAbort = null;
+  });
 }
 
 function renderSettings() {
@@ -291,6 +390,24 @@ function renderSettings() {
         Status: <strong>${STATE.unlocked ? 'Unlocked â all 50 prompts available' : `Free preview (first ${DATA.free_prompt_count} prompts)`}</strong>
       </div>
       ${STATE.unlocked ? '<button class="btn-primary" id="reset-unlock" style="background:#8B2A1A">Reset to Free Preview</button>' : ''}
+    </div>
+    <div class="prompt-block">
+      <div class="pb-section-label">OpenClaw — Local AI via Ollama</div>
+      <p style="margin:4px 0 12px;font-size:13px;color:#6B7280">Connect to a locally-running Ollama instance to run any prompt against a local LLM model directly in the app.</p>
+      <div class="settings-row">
+        <label for="oc-url-in">Ollama Endpoint</label>
+        <input class="input" id="oc-url-in" type="url" placeholder="http://localhost:11434" value="${escapeHtml(OC.getUrl())}">
+        <div class="help">Default: http://localhost:11434. If you see CORS errors, start Ollama with: OLLAMA_ORIGINS=* ollama serve</div>
+      </div>
+      <div class="settings-row">
+        <label for="oc-model-in">Model</label>
+        <input class="input" id="oc-model-in" type="text" placeholder="llama3.2, mistral, phi3…" value="${escapeHtml(OC.getModel())}">
+        <select class="input" id="oc-model-sel" style="display:none;margin-top:8px"></select>
+        <div class="help">Enter an Ollama model name, or click Load Models to fetch installed models.</div>
+      </div>
+      <button class="btn-primary" id="oc-load">Load Models</button>
+      <button class="btn-primary" id="oc-save" style="background:#2F7D5C;margin-left:8px">Save Settings</button>
+      <div class="status" id="oc-status"></div>
     </div>
     <div class="prompt-block">
       <div class="pb-section-label">About Promptdeed</div>
@@ -320,6 +437,40 @@ function renderSettings() {
     localStorage.removeItem('promptdeed_unlocked');
     STATE.unlocked = false;
     renderSettings();
+  });
+  const ocStatus = $('#oc-status');
+  $('#oc-load').addEventListener('click', async () => {
+    const url = ($('#oc-url-in').value.trim().replace(/\/$/, '')) || OC.getUrl();
+    ocStatus.style.display = 'block';
+    ocStatus.className = 'status';
+    ocStatus.textContent = 'Connecting to Ollama…';
+    try {
+      const models = await OC.listModels(url);
+      if (models.length === 0) {
+        ocStatus.className = 'status err';
+        ocStatus.textContent = 'Connected but no models installed. Run: ollama pull llama3.2';
+      } else {
+        const sel = $('#oc-model-sel');
+        const cur = $('#oc-model-in').value || OC.getModel();
+        sel.innerHTML = models.map(m => `<option value="${escapeHtml(m)}"${m === cur ? ' selected' : ''}>${escapeHtml(m)}</option>`).join('');
+        sel.style.display = 'block';
+        sel.addEventListener('change', () => { $('#oc-model-in').value = sel.value; });
+        if (!$('#oc-model-in').value) $('#oc-model-in').value = models[0];
+        ocStatus.className = 'status ok';
+        ocStatus.textContent = `Connected — ${models.length} model${models.length !== 1 ? 's' : ''} found.`;
+      }
+    } catch (e) {
+      ocStatus.className = 'status err';
+      ocStatus.textContent = 'Cannot reach Ollama. Is it running? ' + e.message;
+    }
+  });
+  $('#oc-save').addEventListener('click', () => {
+    const url = $('#oc-url-in').value.trim() || 'http://localhost:11434';
+    const model = $('#oc-model-in').value.trim();
+    OC.save(url, model);
+    ocStatus.className = 'status ok';
+    ocStatus.style.display = 'block';
+    ocStatus.textContent = 'OpenClaw settings saved' + (model ? ' — model: ' + model : '') + '.';
   });
 }
 
