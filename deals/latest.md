@@ -1,3 +1,3 @@
-# Home Depot Clearance Deals — 2026-08-09
+# Home Depot Clearance Deals — 2026-08-10
 
 No deals found today.
