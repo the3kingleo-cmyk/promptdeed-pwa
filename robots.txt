@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://the3kingleo-cmyk.github.io/promptdeed-pwa/sitemap.xml
